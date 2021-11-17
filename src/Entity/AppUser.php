@@ -40,9 +40,26 @@ class AppUser
      */
     private $roles;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Category::class, mappedBy="creator")
+     */
+    private $categories;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Topic::class, mappedBy="creator")
+     */
+    private $topics;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Post::class, mappedBy="creator")
+     */
+    private $posts;
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+        $this->topics = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,6 +125,95 @@ class AppUser
     {
         if ($this->roles->removeElement($role)) {
             $role->removeUser($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+            $category->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        if ($this->categories->removeElement($category)) {
+            // set the owning side to null (unless already changed)
+            if ($category->getCreator() === $this) {
+                $category->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Topic[]
+     */
+    public function getTopics(): Collection
+    {
+        return $this->topics;
+    }
+
+    public function addTopic(Topic $topic): self
+    {
+        if (!$this->topics->contains($topic)) {
+            $this->topics[] = $topic;
+            $topic->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTopic(Topic $topic): self
+    {
+        if ($this->topics->removeElement($topic)) {
+            // set the owning side to null (unless already changed)
+            if ($topic->getCreator() === $this) {
+                $topic->setCreator(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Post[]
+     */
+    public function getPosts(): Collection
+    {
+        return $this->posts;
+    }
+
+    public function addPost(Post $post): self
+    {
+        if (!$this->posts->contains($post)) {
+            $this->posts[] = $post;
+            $post->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removePost(Post $post): self
+    {
+        if ($this->posts->removeElement($post)) {
+            // set the owning side to null (unless already changed)
+            if ($post->getCreator() === $this) {
+                $post->setCreator(null);
+            }
         }
 
         return $this;
