@@ -54,12 +54,18 @@ class AppUser
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="creator")
      */
     private $posts;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $registrationDate;
     public function __construct()
     {
         $this->roles = new ArrayCollection();
         $this->categories = new ArrayCollection();
         $this->topics = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->registrationDate = new \DateTime();
     }
 
     public function getId(): ?int
@@ -215,6 +221,18 @@ class AppUser
                 $post->setCreator(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRegistrationDate(): ?\DateTimeInterface
+    {
+        return $this->registrationDate;
+    }
+
+    public function setRegistrationDate(\DateTimeInterface $registrationDate): self
+    {
+        $this->registrationDate = $registrationDate;
 
         return $this;
     }
