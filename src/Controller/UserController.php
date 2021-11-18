@@ -2,20 +2,28 @@
 
 namespace App\Controller;
 
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+    public function __construct(private UserService $userService){}
+
     /**
-     * @Route("/user", name="user")
+     * @Route("/api/users", name="get_users" method="GET")
      */
-    public function index(): Response
+    public function getAppUsers(): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        return $this->json($this->userService->get());
+    }
+    /**
+     * @Route("/api/user/{id}", name="get_user" method="GET")
+     */
+    public function getAppUser(int $id): Response
+    {
+        return $this->json($this->userService->get($id));
     }
 }
