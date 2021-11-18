@@ -11,14 +11,14 @@ class UserController extends AbstractController
     public function __construct(private UserService $userService){}
 
     /**
-     * @Route("/api/users", name="get_users")
+     * @Route("/api/users", name="get_users", methods={"GET"})
      */
     public function getAppUsers(): Response
     {
         return $this->json($this->userService->get());
     }
     /**
-     * @Route("/api/user/{id}", name="get_user")
+     * @Route("/api/user/{id}", name="get_user", methods={"GET"})
      */
     public function index(): Response
     {
