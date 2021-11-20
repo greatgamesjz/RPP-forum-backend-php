@@ -8,8 +8,17 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
+    public function __construct(private UserService $userService){}
+
     /**
-     * @Route("/user", name="user")
+     * @Route("/api/users", name="get_users")
+     */
+    public function getAppUsers(): Response
+    {
+        return $this->json($this->userService->get());
+    }
+    /**
+     * @Route("/api/user/{id}", name="get_user")
      */
     public function index(): Response
     {

@@ -53,6 +53,7 @@ class Category
 
     public function __construct()
     {
+        $this->creation_date = new \DateTime();
         $this->topics = new ArrayCollection();
         $this->isDeleted = false;
         $this->isActive = false;

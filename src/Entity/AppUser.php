@@ -79,6 +79,12 @@ class AppUser
      * @ORM\Column(type="boolean")
      */
     private $isDeleted;
+  
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $registrationDate;
+  
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -88,6 +94,7 @@ class AppUser
         $this->likes = new ArrayCollection();
         $this->isDeleted = false;
         $this->isActive = false;
+        $this->registrationDate = new \DateTime();
     }
 
     public function getId(): ?int
@@ -318,6 +325,16 @@ class AppUser
     public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
+    }
+  
+    public function getRegistrationDate(): ?\DateTimeInterface
+    {
+        return $this->registrationDate;
+    }
+
+    public function setRegistrationDate(\DateTimeInterface $registrationDate): self
+    {
+        $this->registrationDate = $registrationDate;
 
         return $this;
     }
