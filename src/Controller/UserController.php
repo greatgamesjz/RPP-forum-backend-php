@@ -5,6 +5,8 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\UserService;
+use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController
 {
@@ -26,5 +28,16 @@ class UserController extends AbstractController
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/UserController.php',
         ]);
+    }
+
+    /**
+     * @Route("/api/user/adduser", name="add_user", methods={"POST"})
+     */
+    public function addUser(Request $request): Response
+    {
+        $this->userService->newUserData($request->request->all());
+        return new Response(
+            '<html><body>Your nickname: '.$request->request->get('name').'</body></html>'
+        );
     }
 }
