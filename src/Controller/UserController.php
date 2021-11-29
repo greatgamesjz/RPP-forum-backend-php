@@ -6,7 +6,6 @@ use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Service\UserService;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserController extends AbstractController

@@ -95,6 +95,8 @@ class AppUser
         $this->isDeleted = false;
         $this->isActive = false;
         $this->registrationDate = new \DateTime();
+        $this->avatarFileName = "";
+        $this->isBanned = false;
     }
 
     public function getId(): ?int
@@ -320,11 +322,14 @@ class AppUser
     public function getIsDeleted(): ?bool
     {
         return $this->isDeleted;
+
     }
 
     public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
     }
   
     public function getRegistrationDate(): ?\DateTimeInterface
