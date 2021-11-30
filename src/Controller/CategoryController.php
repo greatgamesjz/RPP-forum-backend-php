@@ -10,6 +10,7 @@ use App\Service\CategoryService;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,11 +21,11 @@ class CategoryController extends AbstractController
     public function __construct(private CategoryService $categoryService){}
 
     /**
-     * @Route("/api/categories", name="get_categories", methods={"GET"})
+     * @Route("/api/get_categories", name="get_categories", methods={"GET"})
      */
-    public function getCategories()
+    public function getCategories(): JsonResponse
     {
-        //@TODO implement method
+        return $this->json($this->categoryService->getAll());
     }
     /**
      * @Route("/api/categories/{id}", name="get_category", methods={"GET"})
@@ -36,7 +37,7 @@ class CategoryController extends AbstractController
     /**
      * @Route("/api/category", name="add_category", methods={"POST"})
      */
-    public function addCategory(Request $request): Response
+    public function addCategory(Request $request): JsonResponse
     {
 
         try {

@@ -55,4 +55,25 @@ class CategoryService implements CrudInterface
     {
         // TODO: Implement get() method.
     }
+
+
+    public function getAll(): array
+    {
+        /** @var Category[] $catList */
+        $catList = $this->em->getRepository(Category::class)
+            ->findBy(['isDeleted' => false, 'isActive' => true]);
+
+        $categoryListResponse = [];
+        foreach($catList as $cat)
+        {
+            $catData = [
+                "name" => $cat->getCategoryName(),
+                "id" => $cat->getId(),
+                "creationDate"=> $cat->getCreationDate()->format("Y-m-d H:i:s")
+            ];
+            $categoryListResponse[] = $catData;
+        }
+
+        return $categoryListResponse;
+    }
 }
