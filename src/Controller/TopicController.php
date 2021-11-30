@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\TopicNotFoundException;
 use App\Exception\ValidatorExceptionInterface;
 use App\Service\TopicService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,5 +46,17 @@ class TopicController extends AbstractController
             return $this->json($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json("Success");
+    }
+    /**
+     * @Route("/api/topic/delete/{id}", name="delete_topic", methods={"GET"})
+     */
+    public function deleteTopic(int $id)
+    {
+        try {
+            $this->topicService->delete($id);
+        } catch (TopicNotFoundException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("SUCCES");
     }
 }
