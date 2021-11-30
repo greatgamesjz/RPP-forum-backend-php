@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Topic;
+use App\Exception\TopicNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorWrongArgsCountException;
 use App\Exception\ValidatorWrongCharacterCountException;
@@ -41,9 +42,21 @@ class TopicService implements CrudInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws TopicNotFoundException
+     */
     public function delete(int $id)
     {
-        // TODO: Implement delete() method.
+        /** @var Topic $top */
+        $top = $this->em->getRepository(Topic::class)
+            ->findOneBy(["id" => $id, "isDeleted" => false]);
+        if(!$top)
+            throw new TopicNotFoundException($id);
+        $top->setIsDeleted(true);
+
+        $this->em->persist($top);
+
+        $this->em->flush();
     }
 
     public function update(int $id, array $data)
