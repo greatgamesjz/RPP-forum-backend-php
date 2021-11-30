@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\CategoryController;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
