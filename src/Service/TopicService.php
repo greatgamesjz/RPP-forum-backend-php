@@ -55,4 +55,24 @@ class TopicService implements CrudInterface
     {
         // TODO: Implement get() method.
     }
+
+    public function getAll(): array
+    {
+        /** @var Topic[] $topList */
+        $topList = $this->em->getRepository(Topic::class)
+            ->findBy(['isDeleted' => false, 'isActive' => true]);
+
+        $topicListResponse = [];
+        foreach($topList as $top)
+        {
+            $topData = [
+                "name" => $top->getTopicName(),
+                "id" => $top->getId(),
+                "creationDate"=> $top->getCreationDate()->format("Y-m-d H:i:s")
+            ];
+            $topicListResponse[] = $topData;
+        }
+
+        return $topicListResponse;
+    }
 }
