@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Category;
+use App\Exception\CategoryNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorWrongArgsCountException;
 use App\Exception\ValidatorWrongCharacterCountException;
@@ -43,9 +44,21 @@ class CategoryService implements CrudInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws CategoryNotFoundException
+     */
     public function delete(int $id)
     {
-        // TODO: Implement delete() method.
+        /** @var Category $cat */
+        $cat = $this->em->getRepository(Category::class)
+            ->findOneBy(["id" => $id, "isDeleted" => false]);
+        if(!$cat)
+            throw new CategoryNotFoundException($id);
+        $cat->setIsDeleted(true);
+
+        $this->em->persist($cat);
+
+        $this->em->flush();
     }
 
     public function update(int $id, array $data)
@@ -56,5 +69,26 @@ class CategoryService implements CrudInterface
     public function get(int $id = null)
     {
         // TODO: Implement get() method.
+    }
+
+
+    public function getAll(): array
+    {
+        /** @var Category[] $catList */
+        $catList = $this->em->getRepository(Category::class)
+            ->findBy(['isDeleted' => false, 'isActive' => true]);
+
+        $categoryListResponse = [];
+        foreach($catList as $cat)
+        {
+            $catData = [
+                "name" => $cat->getCategoryName(),
+                "id" => $cat->getId(),
+                "creationDate"=> $cat->getCreationDate()->format("Y-m-d H:i:s")
+            ];
+            $categoryListResponse[] = $catData;
+        }
+
+        return $categoryListResponse;
     }
 }
