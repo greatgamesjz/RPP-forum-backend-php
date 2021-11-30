@@ -56,7 +56,7 @@ class Category
         $this->creation_date = new \DateTime();
         $this->topics = new ArrayCollection();
         $this->isDeleted = false;
-        $this->isActive = false;
+        $this->isActive = true;
         $this->creation_date = new DateTime();
     }
 
