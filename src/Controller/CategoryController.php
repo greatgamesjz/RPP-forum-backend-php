@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\CategoryNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorExceptionInterface;
 use App\Exception\ValidatorWrongArgsCountException;
@@ -48,5 +49,17 @@ class CategoryController extends AbstractController
             return $this->json($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json("Success");
+    }
+    /**
+     * @Route("/api/category/delete/{id}", name="delete_category", methods={"DELETE"})
+     */
+    public function deleteCategory(int $id)
+    {
+        try {
+            $this->categoryService->delete($id);
+        } catch (CategoryNotFoundException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("SUCCES");
     }
 }
