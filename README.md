@@ -18,4 +18,8 @@ php bin/console app:data-fixture
 
 ## Usage
 
+Komenda do tworzenia usera
+
+php bin/console app:user:create --nickname (nick) --password (hasło) --email (email) --role (np.USER/ADMIN)
+
 ## License
