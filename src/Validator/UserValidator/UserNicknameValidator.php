@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Validator\CategoryValidator;
+namespace App\Validator\UserValidator;
 
 use App\Exception\ValidatorWrongCharacterCountException;
 use App\Validator\ValidatorDecorator;
 
-class CategoryNameValidator extends ValidatorDecorator
+class UserNicknameValidator extends ValidatorDecorator
 {
     const MIN_LENGTH = 5;
     const MAX_LENGTH = 20;
@@ -16,17 +16,17 @@ class CategoryNameValidator extends ValidatorDecorator
     public function validate()
     {
 
-        $this->validateNameLength();
+        $this->validateNickNameLength();
         parent::validate();
     }
 
     /**
      * @throws ValidatorWrongCharacterCountException
      */
-    private function validateNameLength(): void
+    private function validateNickNameLength(): void
     {
-        if(strlen($this->data["name"]) < self::MIN_LENGTH || strlen($this->data["name"]) > self::MAX_LENGTH) {
-            throw new ValidatorWrongCharacterCountException("name");
+        if(strlen($this->data["nickname"]) < self::MIN_LENGTH || strlen($this->data["nickname"]) > self::MAX_LENGTH) {
+            throw new ValidatorWrongCharacterCountException("nickname");
         }
 
     }

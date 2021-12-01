@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Validator\CategoryValidator;
+namespace App\Validator\UserValidator;
 
 use App\Exception\ValidatorWrongCharacterPasswordException;
 use App\Validator\ValidatorDecorator;
 
-class CategoryPasswordValidator extends ValidatorDecorator
+class UserPasswordValidator extends ValidatorDecorator
 {
     const MIN_LENGTH = 6;
     /**

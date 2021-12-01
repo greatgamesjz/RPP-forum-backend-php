@@ -8,9 +8,9 @@ use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorWrongArgsCountException;
 use App\Exception\ValidatorWrongCharacterCountException;
 use App\Repository\CategoryRepository;
-use App\Validator\CategoryValidator\CategoryEmailValidator;
+use App\Validator\UserValidator\UserEmailValidator;
 use App\Validator\CategoryValidator\CategoryFieldsValidator;
-use App\Validator\CategoryValidator\CategoryNameValidator;
+use App\Validator\UserValidator\UserNicknameValidator;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -27,9 +27,9 @@ class CategoryService implements CrudInterface
     {
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
-        $validator = new CategoryNameValidator($validator);
+        $validator = new UserNicknameValidator($validator);
         $validator = new CategoryFieldsValidator($validator);
-        $validator = new CategoryEmailValidator($validator);
+        $validator = new UserEmailValidator($validator);
         $validator->setEm($this->em->getRepository(Category::class));
         $validator->validate();
 
