@@ -19,7 +19,7 @@ class UserEmailValidator extends ValidatorDecorator
     }
 
     /**
-     * @throws ValidatorWrongCharacterEmailException
+     * @throws ValidatorWrongCharacterEmailException|ValidatorEmaiIExistsException
      */
     public function validate()
     {

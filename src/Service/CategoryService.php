@@ -22,8 +22,6 @@ class CategoryService implements CrudInterface
 
     /**
      * @throws ValidatorDataSetException
-     * @throws ValidatorWrongArgsCountException
-     * @throws ValidatorWrongCharacterCountException
      */
     public function add(array $data)
     {
