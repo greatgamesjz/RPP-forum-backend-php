@@ -22,21 +22,23 @@ class CategoryController extends AbstractController
     public function __construct(private CategoryService $categoryService){}
 
     /**
-     * @Route("/api/get_categories", name="get_categories", methods={"GET"})
+     * @Route("/api/category/get/all", name="get_categories", methods={"GET"})
      */
     public function getCategories(): JsonResponse
     {
         return $this->json($this->categoryService->getAll());
     }
+
     /**
-     * @Route("/api/categories/{id}", name="get_category", methods={"GET"})
+     * @Route("/api/category/get/{id}", name="get_category", methods={"GET"})
      */
     public function getCategory(int $id)
     {
-        //@TODO implement method
+        return $this->json(json_encode(($this->categoryService->get($id))));
     }
+
     /**
-     * @Route("/api/category", name="add_category", methods={"POST"})
+     * @Route("/api/category/add", name="add_category", methods={"POST"})
      */
     public function addCategory(Request $request): JsonResponse
     {
@@ -50,6 +52,7 @@ class CategoryController extends AbstractController
         }
         return $this->json("Success");
     }
+
     /**
      * @Route("/api/category/delete/{id}", name="delete_category", methods={"DELETE"})
      */

@@ -66,9 +66,8 @@ class CategoryService implements CrudInterface
 
     public function get(int $id = null)
     {
-        // TODO: Implement get() method.
+        return $this->em->getRepository(Category::class)->findOneBy(["id" => $id]);
     }
-
 
     public function getAll(): array
     {
