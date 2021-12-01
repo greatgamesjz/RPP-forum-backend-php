@@ -35,9 +35,21 @@ class UserController extends AbstractController
      */
     public function addUser(Request $request): Response
     {
-        $this->userService->newUserData($request->request->all());
-        return new Response(
-            '<html><body>Your nickname: '.$request->request->get('name').'</body></html>'
-        );
+        try{
+            $this->userService->newUserData($request->request->all());
+            return $this->json([
+                'message' => '200',
+            ]);
+        }catch(Exception $e){
+            $errorMessage = $e->getMessage();
+            $response = new Response();
+            $response->setContent($errorMessage);
+            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
+            return $response;
+        }
+
+//        return new Response(
+//            '<html><body>Your nickname: '.$request->request->get('name').'</body></html>'
+//        );
     }
 }
