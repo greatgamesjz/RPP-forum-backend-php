@@ -54,12 +54,14 @@ class UserService implements CrudInterface
         }
         return $result;
     }
-    public function newUserData(array $data){
+    public function newUserData(array $data)
+    {
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
         $validator = new CategoryNameValidator($validator);
         $validator = new CategoryPasswordValidator($validator);
         $validator = new CategoryEmailValidator($validator);
+        $validator->setem($this->em);
         $validator->validate();
 
     }

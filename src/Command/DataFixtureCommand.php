@@ -41,7 +41,7 @@ class DataFixtureCommand extends Command
     ];
 
 
-    public function __construct(private EntityManagerInterface $em,string $name = null)
+    public function __construct(private EntityManagerInterface $em, string $name = null)
     {
         parent::__construct($name);
     }
