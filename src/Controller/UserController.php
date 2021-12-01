@@ -13,14 +13,14 @@ class UserController extends AbstractController
     public function __construct(private UserService $userService){}
 
     /**
-     * @Route("/api/users", name="get_users", methods={"GET"})
+     * @Route("/api/user/get/all", name="get_users", methods={"GET"})
      */
     public function getAppUsers(): Response
     {
         return $this->json($this->userService->get());
     }
     /**
-     * @Route("/api/user/{id}", name="get_user", methods={"GET"})
+     * @Route("/api/user/get/{id}", name="get_user", methods={"GET"})
      */
     public function index(): Response
     {
@@ -31,7 +31,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/user/adduser", name="add_user", methods={"POST"})
+     * @Route("/api/user/add", name="add_user", methods={"POST"})
      */
     public function addUser(Request $request): Response
     {

@@ -19,21 +19,21 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @Route("/api/get_topics", name="get_topics", methods={"GET"})
+     * @Route("/api/topic/get/all", name="get_topics", methods={"GET"})
      */
     public function getTopics(): JsonResponse
     {
         return $this->json($this->topicService->getAll());
     }
     /**
-     * @Route("/api/topics/{id}", name="get_topic", methods={"GET"})
+     * @Route("/api/topic/get/{id}", name="get_topic", methods={"GET"})
      */
     public function getTopic(int $id)
     {
         //@TODO implement method
     }
     /**
-     * @Route("/api/topic", name="add_topic", methods={"POST"})
+     * @Route("/api/topic/add", name="add_topic", methods={"POST"})
      */
     public function addTopic(Request $request): Response
     {

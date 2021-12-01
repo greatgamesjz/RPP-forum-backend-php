@@ -12,7 +12,7 @@ use DateTime;
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Category
+class Category implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -154,5 +154,18 @@ class Category
         $this->isDeleted = $isDeleted;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "Id" => $this->getId(),
+            "CategoryName" => $this->getCategoryName(),
+            "CreatorName" => $this->getCreator()->getNickname(),
+            "CreatorId" => $this->getCreator()->getId(),
+            "CreationDate" => $this->getCreationDate(),
+            "IsActive" => $this->getIsActive(),
+            "IsDeleted" => $this->getIsDeleted()
+        ];
     }
 }
