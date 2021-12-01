@@ -3,20 +3,22 @@
 namespace App\Service;
 
 use App\Entity\AppUser;
+use App\Entity\Category;
 use App\Exception\UserNotFoundException;
 use App\Validator\CategoryValidator\CategoryEmailValidator;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorEmaiIExistsException;
 use App\Exception\ValidatorWrongCharacterEmailException;
-use App\Validator\CategoryValidator\CategoryNameValidator;
-use App\Validator\CategoryValidator\CategoryPasswordValidator;
+use App\Validator\UserValidator\UserNicknameValidator;
+use App\Validator\UserValidator\UserPasswordValidator;
 use App\Validator\UserValidator\UserEmailValidator;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class UserService implements CrudInterface
 {
-    public function __construct(private EntityManagerInterface $em){}
+    public function __construct(private EntityManagerInterface $em,  private NormalizerInterface $normalizer){}
 
 
     /**
@@ -29,11 +31,20 @@ class UserService implements CrudInterface
     {
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
-        $validator = new CategoryNameValidator($validator);
-        $validator = new CategoryPasswordValidator($validator);
+        $validator = new UserNicknameValidator($validator);
+        $validator = new UserPasswordValidator($validator);
         $validator = new UserEmailValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
+
+        unset($validator);
+
+        $category = $this->normalizer->denormalize($data, AppUser::class);
+
+        $this->em->persist($category);
+
+        $this->em->flush();
+
     }
 
     public function delete(int $id)
