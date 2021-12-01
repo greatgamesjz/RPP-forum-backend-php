@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Validator\CategoryValidator;
+namespace App\Validator\UserValidator;
 
 use App\Entity\AppUser;
 use App\Exception\ValidatorWrongCharacterEmailException;
-use App\Exception\ValidatorEmailIsExistsException;
-use App\Repository\CategoryEmailRepository;
+use App\Exception\ValidatorEmaiIExistsException;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 
-class CategoryEmailValidator extends ValidatorDecorator
+class UserEmailValidator extends ValidatorDecorator
 {
     const MIN_LENGTH = 5;
     private EntityManagerInterface $entityManager;
@@ -24,29 +23,29 @@ class CategoryEmailValidator extends ValidatorDecorator
      */
     public function validate()
     {
-        $this->validateEmailLength();
+        $this->validateEmailLength(strval($this->data["email"]));
+        $this->checkIfEmailExists(strval($this->data["email"]));
         parent::validate();
     }
 
     /**
      * @throws ValidatorWrongCharacterEmailException
      */
-    private function validateEmailLength(): void
+    private function validateEmailLength($email): void
     {
-        if(strlen($this->data["email"]) < self::MIN_LENGTH ||
-            !strpos($this->data["email"],"@")) {
+        if($email < self::MIN_LENGTH ||
+            !strpos($email,"@")) {
             throw new ValidatorWrongCharacterEmailException("email");
         }
-        $this->checkIfEmailExists(strval($this->data["email"]));
     }
     /**
-     * @throws ValidatorEmailIsExistsException
+     * @throws ValidatorEmaiIExistsException
      */
     public function checkIfEmailExists($email)
     {
         if($this->entityManager->getRepository(appuser::class)->findOneBy(['email' => $email]) !== null)
         {
-            throw new ValidatorEmailIsExistsException(strval($email));
+            throw new ValidatorEmaiIExistsException(strval($email));
         }
     }
 }

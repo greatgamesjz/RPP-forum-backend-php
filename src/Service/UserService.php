@@ -3,9 +3,9 @@
 namespace App\Service;
 
 use App\Entity\AppUser;
-use App\Validator\CategoryValidator\CategoryEmailValidator;
 use App\Validator\CategoryValidator\CategoryNameValidator;
 use App\Validator\CategoryValidator\CategoryPasswordValidator;
+use App\Validator\UserValidator\UserEmailValidator;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -60,7 +60,7 @@ class UserService implements CrudInterface
         $validator->setData($data);
         $validator = new CategoryNameValidator($validator);
         $validator = new CategoryPasswordValidator($validator);
-        $validator = new CategoryEmailValidator($validator);
+        $validator = new UserEmailValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
 

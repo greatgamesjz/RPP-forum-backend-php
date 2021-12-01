@@ -2,11 +2,10 @@
 
 namespace App\Exception;
 
-use App\Validator\CategoryValidator\CategoryEmailValidator;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\HttpFoundation\Response;
 
-class ValidatorEmailIsExistsException extends \Exception implements ValidatorExceptionInterface
+class ValidatorEmaiIExistsException extends \Exception implements ValidatorExceptionInterface
 {
     const MESSAGE = "%s is already used.";
 
