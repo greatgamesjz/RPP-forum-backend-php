@@ -20,7 +20,7 @@ class PostService implements CrudInterface
         // TODO: Implement update() method.
     }
 
-    public function get(int $id = null)
+    public function get(int $id)
     {
         // TODO: Implement get() method.
     }

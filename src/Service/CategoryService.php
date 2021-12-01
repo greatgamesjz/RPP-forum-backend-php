@@ -64,9 +64,15 @@ class CategoryService implements CrudInterface
         // TODO: Implement update() method.
     }
 
-    public function get(int $id = null)
+    /**
+     * @throws CategoryNotFoundException
+     */
+    public function get(int $id)
     {
-        return $this->em->getRepository(Category::class)->findOneBy(["id" => $id]);
+        $cat = $this->em->getRepository(Category::class)->findOneBy(["id" => $id]);
+        if(!$cat)
+            throw new CategoryNotFoundException($id);
+        return $cat;
     }
 
     public function getAll(): array

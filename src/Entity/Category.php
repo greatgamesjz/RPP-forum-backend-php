@@ -37,7 +37,7 @@ class Category implements \JsonSerializable
     private $creation_date;
 
     /**
-     * @ORM\OneToMany(targetEntity=Topic::class, mappedBy="topic")
+     * @ORM\OneToMany(targetEntity=Topic::class, mappedBy="category")
      */
     private $topics;
 
@@ -157,6 +157,12 @@ class Category implements \JsonSerializable
 
     public function jsonSerialize()
     {
+        $topicList = $this->getTopics();
+        $topicListId = [];
+        foreach($topicList as $topic)
+        {
+            $topicListId[] = $topic->getId();
+        }
         return [
             "Id" => $this->getId(),
             "CategoryName" => $this->getCategoryName(),
@@ -164,7 +170,8 @@ class Category implements \JsonSerializable
             "CreatorId" => $this->getCreator()->getId(),
             "CreationDate" => $this->getCreationDate(),
             "IsActive" => $this->getIsActive(),
-            "IsDeleted" => $this->getIsDeleted()
+            "IsDeleted" => $this->getIsDeleted(),
+            "TopicsId" => $topicListId
         ];
     }
 }

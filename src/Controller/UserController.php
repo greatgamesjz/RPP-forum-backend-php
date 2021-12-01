@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\UserNotFoundException;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,17 +18,19 @@ class UserController extends AbstractController
      */
     public function getAppUsers(): Response
     {
-        return $this->json($this->userService->get());
+        return $this->json($this->userService->getAll());
     }
+
     /**
      * @Route("/api/user/get/{id}", name="get_user", methods={"GET"})
      */
-    public function index(): Response
+    public function getAppUser(int $id): Response
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/UserController.php',
-        ]);
+        try {
+            return $this->json(json_encode(($this->userService->get($id))));
+        } catch (UserNotFoundException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
     }
 
     /**

@@ -11,7 +11,7 @@ use DateTime;
 /**
  * @ORM\Entity(repositoryClass=TopicRepository::class)
  */
-class Topic
+class Topic implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -170,5 +170,25 @@ class Topic
         $this->isDeleted = $isDeleted;
 
         return $this;
+    }
+    public function jsonSerialize()
+    {
+        $postList = $this->getPosts();
+        $postListId = [];
+        foreach($postList as $post)
+        {
+            $postListId[] = $post->getId();
+        }
+        return [
+            "Id" => $this->getId(),
+            "TopicName" => $this->getTopicName(),
+            "CreatorName" => $this->getCreator()->getNickname(),
+            "CreatorId" => $this->getCreator()->getId(),
+            "CreationDate" => $this->getCreationDate(),
+            "IsActive" => $this->getIsActive(),
+            "IsDeleted" => $this->getIsDeleted(),
+            "CategoryId" => $this->getCategory()->getId(),
+            "PostsId" => $postListId
+        ];
     }
 }
