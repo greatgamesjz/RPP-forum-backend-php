@@ -35,14 +35,14 @@ class TopicController extends AbstractController
     /**
      * @Route("/api/topic/add", name="add_topic", methods={"POST"})
      */
-    public function addTopic(Request $request): Response
+    public function addTopic(Request $request): JsonResponse
     {
 
         try {
             $this->topicService->add($request->request->all());
         } catch (ValidatorExceptionInterface $e) {
             return $this->json($e->getMessage(), $e->getCode());
-        } catch (\Exception|ExceptionInterface $e) {
+        } catch (\Exception $e) {
             return $this->json($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json("Success");
@@ -50,7 +50,7 @@ class TopicController extends AbstractController
     /**
      * @Route("/api/topic/delete/{id}", name="delete_topic", methods={"GET"})
      */
-    public function deleteTopic(int $id)
+    public function deleteTopic(int $id): JsonResponse
     {
         try {
             $this->topicService->delete($id);

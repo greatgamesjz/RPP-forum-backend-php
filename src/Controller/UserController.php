@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Exception\ValidatorDataSetException;
+use App\Exception\ValidatorEmaiIExistsException;
+use App\Exception\ValidatorWrongCharacterCountException;
+use App\Exception\ValidatorWrongCharacterEmailException;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,14 +20,14 @@ class UserController extends AbstractController
     /**
      * @Route("/api/user/get/all", name="get_users", methods={"GET"})
      */
-    public function getAppUsers(): Response
+    public function getAppUsers(): JsonResponse
     {
         return $this->json($this->userService->get());
     }
     /**
      * @Route("/api/user/get/{id}", name="get_user", methods={"GET"})
      */
-    public function index(): Response
+    public function index(): JsonResponse
     {
         return $this->json([
             'message' => 'Welcome to your new controller!',
@@ -33,23 +38,13 @@ class UserController extends AbstractController
     /**
      * @Route("/api/user/add", name="add_user", methods={"POST"})
      */
-    public function addUser(Request $request): Response
+    public function addUser(Request $request): JsonResponse
     {
         try{
-            $this->userService->newUserData($request->request->all());
-            return $this->json([
-                'message' => '200',
-            ]);
-        }catch(Exception $e){
-            $errorMessage = $e->getMessage();
-            $response = new Response();
-            $response->setContent($errorMessage);
-            $response->setStatusCode(Response::HTTP_BAD_REQUEST);
-            return $response;
+            $this->userService->add($request->request->all());
+            return $this->json("success");
+        }catch(ValidatorWrongCharacterEmailException|ValidatorDataSetException|ValidatorEmaiIExistsException $e){
+            return $this->json($e->getMessage(), $e->getCode());
         }
-
-//        return new Response(
-//            '<html><body>Your nickname: '.$request->request->get('name').'</body></html>'
-//        );
     }
 }
