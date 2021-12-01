@@ -25,13 +25,19 @@ class TopicController extends AbstractController
     {
         return $this->json($this->topicService->getAll());
     }
+
     /**
      * @Route("/api/topic/get/{id}", name="get_topic", methods={"GET"})
      */
     public function getTopic(int $id)
     {
-        //@TODO implement method
+        try {
+            return $this->json(json_encode(($this->topicService->get($id))));
+        } catch (TopicNotFoundException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
     }
+
     /**
      * @Route("/api/topic/add", name="add_topic", methods={"POST"})
      */

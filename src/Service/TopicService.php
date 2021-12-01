@@ -12,7 +12,6 @@ use App\Validator\UserValidator\UserNicknameValidator;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-
 class TopicService implements CrudInterface
 {
     public function __construct(private EntityManagerInterface $em, private NormalizerInterface $normalizer)
@@ -64,9 +63,15 @@ class TopicService implements CrudInterface
         // TODO: Implement update() method.
     }
 
-    public function get(int $id = null)
+    /**
+     * @throws TopicNotFoundException
+     */
+    public function get(int $id)
     {
-        // TODO: Implement get() method.
+        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id]);
+        if(!$top)
+            throw new TopicNotFoundException($id);
+        return $top;
     }
 
     public function getAll(): array

@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\AppUser;
 use App\Entity\Category;
+use App\Exception\UserNotFoundException;
+use App\Validator\CategoryValidator\CategoryEmailValidator;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorEmaiIExistsException;
 use App\Exception\ValidatorWrongCharacterEmailException;
@@ -58,22 +60,28 @@ class UserService implements CrudInterface
     /**
      * @param int|null $id
      * @return AppUser[]
+     * @throws UserNotFoundException
      */
-    public function get(int $id = null): array
+    public function get(int $id): array
     {
         $result = [];
-        if($id === null) {
-            /** @var AppUser[] $users */
-            $users = $this->em->getRepository(AppUser::class)->findAll();
-            foreach ($users as $user) {
-                $result[] = [
-                    "name" => $user->getNickname(),
-                    "email" => $user->getEmail()
-                ];
-            }
-        } else {
+
             /** @var AppUser $user */
-            $user = $this->em->getRepository(AppUser::class)->findAll();
+            $user = $this->em->getRepository(AppUser::class)->findOneBy(["id" => $id]);
+            if(!$user)
+                throw new UserNotFoundException($id);
+            $result[] = [
+                "name" => $user->getNickname(),
+                "email" => $user->getEmail()
+            ];
+        return $result;
+    }
+    public function getAll(): array
+    {
+        $result = [];
+        /** @var AppUser[] $users */
+        $users = $this->em->getRepository(AppUser::class)->findAll();
+        foreach ($users as $user) {
             $result[] = [
                 "name" => $user->getNickname(),
                 "email" => $user->getEmail()
