@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
+use App\Controller\CategoryController;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Category
+class Category implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -22,7 +24,7 @@ class Category
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $categoryName;
 
     /**
      * @ORM\ManyToOne(targetEntity=AppUser::class, inversedBy="categories")
@@ -40,10 +42,23 @@ class Category
      */
     private $topics;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeleted;
+
     public function __construct()
     {
         $this->creation_date = new \DateTime();
         $this->topics = new ArrayCollection();
+        $this->isDeleted = false;
+        $this->isActive = true;
+        $this->creation_date = new DateTime();
     }
 
     public function getId(): ?int
@@ -51,14 +66,14 @@ class Category
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getCategoryName(): ?string
     {
-        return $this->name;
+        return $this->categoryName;
     }
 
-    public function setName(string $name): self
+    public function setCategoryName(string $categoryName): self
     {
-        $this->name = $name;
+        $this->categoryName = $categoryName;
 
         return $this;
     }
@@ -99,7 +114,7 @@ class Category
     {
         if (!$this->topics->contains($topic)) {
             $this->topics[] = $topic;
-            $topic->setTopic($this);
+            $topic->setCategory($this);
         }
 
         return $this;
@@ -109,11 +124,48 @@ class Category
     {
         if ($this->topics->removeElement($topic)) {
             // set the owning side to null (unless already changed)
-            if ($topic->getTopic() === $this) {
-                $topic->setTopic(null);
+            if ($topic->getCategory() === $this) {
+                $topic->setCategory(null);
             }
         }
 
         return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "Id" => $this->getId(),
+            "CategoryName" => $this->getCategoryName(),
+            "CreatorName" => $this->getCreator()->getNickname(),
+            "CreatorId" => $this->getCreator()->getId(),
+            "CreationDate" => $this->getCreationDate(),
+            "IsActive" => $this->getIsActive(),
+            "IsDeleted" => $this->getIsDeleted()
+        ];
     }
 }

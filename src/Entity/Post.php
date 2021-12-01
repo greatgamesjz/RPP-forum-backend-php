@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -20,7 +23,7 @@ class Post
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $postName;
 
     /**
      * @ORM\ManyToOne(targetEntity=AppUser::class, inversedBy="posts")
@@ -39,19 +42,53 @@ class Post
      */
     private $topic;
 
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $lastModify;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $content;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=AppUser::class, inversedBy="likes")
+     */
+    private $usersLiked;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeleted;
+
+    public function __construct()
+    {
+        $this->usersLiked = new ArrayCollection();
+        $this->isDeleted = false;
+        $this->isActive = false;
+        $this->creation_date = new DateTime();
+        $this->lastModify = new DateTime();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getPostName(): ?string
     {
-        return $this->name;
+        return $this->postName;
     }
 
-    public function setName(string $name): self
+    public function setPostName(string $postName): self
     {
-        $this->name = $name;
+        $this->postName = $postName;
 
         return $this;
     }
@@ -88,6 +125,83 @@ class Post
     public function setTopic(?Topic $topic): self
     {
         $this->topic = $topic;
+
+        return $this;
+    }
+
+    public function getLastModify(): ?\DateTimeInterface
+    {
+        return $this->lastModify;
+    }
+
+    public function setLastModify(\DateTimeInterface $lastModify): self
+    {
+        $this->lastModify = $lastModify;
+
+        return $this;
+    }
+
+    public function  getCategory(): Category
+    {
+        return $this->topic->category;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AppUser[]
+     */
+    public function getUsersLiked(): Collection
+    {
+        return $this->usersLiked;
+    }
+
+    public function addUsersLiked(AppUser $usersLiked): self
+    {
+        if (!$this->usersLiked->contains($usersLiked)) {
+            $this->usersLiked[] = $usersLiked;
+        }
+
+        return $this;
+    }
+
+    public function removeUsersLiked(AppUser $usersLiked): self
+    {
+        $this->usersLiked->removeElement($usersLiked);
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }

@@ -34,11 +34,23 @@ class Role
      */
     private $permissions;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeleted;
+
     public function __construct()
     {
         $this->appuser = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->permissions = new ArrayCollection();
+        $this->isDeleted = false;
+        $this->isActive = false;
     }
 
     public function getId(): ?int
@@ -105,6 +117,30 @@ class Role
         if ($this->permissions->removeElement($permission)) {
             $permission->removeRole($this);
         }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }

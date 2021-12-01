@@ -6,6 +6,7 @@ use App\Repository\TopicRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass=TopicRepository::class)
@@ -22,7 +23,7 @@ class Topic
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    private $topicName;
 
     /**
      * @ORM\ManyToOne(targetEntity=AppUser::class, inversedBy="topics")
@@ -39,16 +40,29 @@ class Topic
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="topics")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $topic;
+    private $category;
 
     /**
      * @ORM\OneToMany(targetEntity=Post::class, mappedBy="topic")
      */
     private $posts;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isDeleted;
+
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->isDeleted = false;
+        $this->isActive = false;
+        $this->creation_date = new DateTime();
     }
 
     public function getId(): ?int
@@ -56,14 +70,14 @@ class Topic
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTopicName(): ?string
     {
-        return $this->name;
+        return $this->topicName;
     }
 
-    public function setName(string $name): self
+    public function setTopicName(string $topicName): self
     {
-        $this->name = $name;
+        $this->topicName = $topicName;
 
         return $this;
     }
@@ -92,14 +106,14 @@ class Topic
         return $this;
     }
 
-    public function getTopic(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->topic;
+        return $this->category;
     }
 
-    public function setTopic(?Category $topic): self
+    public function setCategory(?Category $category): self
     {
-        $this->topic = $topic;
+        $this->category = $category;
 
         return $this;
     }
@@ -130,6 +144,30 @@ class Topic
                 $post->setTopic(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }
