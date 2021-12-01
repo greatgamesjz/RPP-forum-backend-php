@@ -4829,16 +4829,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.36.0",
+            "version": "v1.36.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "40b9b55c5d50825995820190f814936c06237b48"
+                "reference": "0f40c826c0725208c254ddcd3481690e6c7e5047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/40b9b55c5d50825995820190f814936c06237b48",
-                "reference": "40b9b55c5d50825995820190f814936c06237b48",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/0f40c826c0725208c254ddcd3481690e6c7e5047",
+                "reference": "0f40c826c0725208c254ddcd3481690e6c7e5047",
                 "shasum": ""
             },
             "require": {
@@ -4897,7 +4897,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.36.0"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.36.3"
             },
             "funding": [
                 {
@@ -4913,7 +4913,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-11-16T13:52:26+00:00"
+            "time": "2021-11-22T18:44:03+00:00"
         }
     ],
     "aliases": [],

@@ -60,7 +60,7 @@ class CategoryController extends AbstractController
     /**
      * @Route("/api/category/delete/{id}", name="delete_category", methods={"DELETE"})
      */
-    public function deleteCategory(int $id)
+    public function deleteCategory(int $id) : JsonResponse
     {
         try {
             $this->categoryService->delete($id);
