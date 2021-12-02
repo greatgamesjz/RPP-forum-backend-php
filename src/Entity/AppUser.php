@@ -84,6 +84,11 @@ class AppUser
      * @ORM\Column(type="datetime")
      */
     private $registrationDate;
+
+    /**
+     * @ORM\OneToOne(targetEntity=PrivateMessage::class, mappedBy="sender", cascade={"persist", "remove"})
+     */
+    private $privateMessage;
   
     public function __construct()
     {
@@ -340,6 +345,39 @@ class AppUser
     public function setRegistrationDate(\DateTimeInterface $registrationDate): self
     {
         $this->registrationDate = $registrationDate;
+
+        return $this;
+    }
+
+    public function getSenderPrivateMessage(): ?PrivateMessage
+    {
+        return $this->privateMessage;
+    }
+
+    public function setSenderPrivateMessage(PrivateMessage $privateMessage): self
+    {
+        // set the owning side of the relation if necessary
+        if ($privateMessage->getSender() !== $this) {
+            $privateMessage->setSender($this);
+        }
+
+        $this->privateMessage = $privateMessage;
+
+        return $this;
+    }
+    public function getReciverPrivateMessage(): ?PrivateMessage
+    {
+        return $this->privateMessage;
+    }
+
+    public function setReciverPrivateMessage(PrivateMessage $privateMessage): self
+    {
+        // set the owning side of the relation if necessary
+        if ($privateMessage->getReciver() !== $this) {
+            $privateMessage->setReciver($this);
+        }
+
+        $this->privateMessage = $privateMessage;
 
         return $this;
     }
