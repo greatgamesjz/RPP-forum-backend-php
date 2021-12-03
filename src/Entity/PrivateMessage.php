@@ -23,18 +23,6 @@ class PrivateMessage
     private $content;
 
     /**
-     * @ORM\OneToOne(targetEntity=AppUser::class, inversedBy="privateMessage", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $sender;
-
-    /**
-     * @ORM\OneToOne(targetEntity=AppUser::class, inversedBy="privateMessage", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $reciver;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $sendTime;
@@ -43,6 +31,18 @@ class PrivateMessage
      * @ORM\Column(type="boolean")
      */
     private $isDeleted;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=AppUser::class, inversedBy="recivedMessages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $reciver;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=AppUser::class, inversedBy="sentMessages")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $sender;
 
     public function getId(): ?int
     {
@@ -57,30 +57,6 @@ class PrivateMessage
     public function setContent(string $content): self
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getSender(): ?AppUser
-    {
-        return $this->sender;
-    }
-
-    public function setSender(AppUser $sender): self
-    {
-        $this->sender = $sender;
-
-        return $this;
-    }
-
-    public function getReciver(): ?AppUser
-    {
-        return $this->reciver;
-    }
-
-    public function setReciver(AppUser $reciver): self
-    {
-        $this->reciver = $reciver;
 
         return $this;
     }
@@ -105,6 +81,30 @@ class PrivateMessage
     public function setIsDeleted(bool $isDeleted): self
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getReciver(): ?AppUser
+    {
+        return $this->reciver;
+    }
+
+    public function setReciver(?AppUser $reciver): self
+    {
+        $this->reciver = $reciver;
+
+        return $this;
+    }
+
+    public function getSender(): ?AppUser
+    {
+        return $this->sender;
+    }
+
+    public function setSender(?AppUser $sender): self
+    {
+        $this->sender = $sender;
 
         return $this;
     }

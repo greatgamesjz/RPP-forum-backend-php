@@ -86,10 +86,15 @@ class AppUser
     private $registrationDate;
 
     /**
-     * @ORM\OneToOne(targetEntity=PrivateMessage::class, mappedBy="sender", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=PrivateMessage::class, mappedBy="reciver")
      */
-    private $privateMessage;
-  
+    private $recivedMessages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrivateMessage::class, mappedBy="sender")
+     */
+    private $sentMessages;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -102,6 +107,8 @@ class AppUser
         $this->registrationDate = new \DateTime();
         $this->avatarFileName = "";
         $this->isBanned = false;
+        $this->recivedMessages = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -349,36 +356,64 @@ class AppUser
         return $this;
     }
 
-    public function getSenderPrivateMessage(): ?PrivateMessage
+    /**
+     * @return Collection|PrivateMessage[]
+     */
+    public function getRecivedMessages(): Collection
     {
-        return $this->privateMessage;
+        return $this->recivedMessages;
     }
 
-    public function setSenderPrivateMessage(PrivateMessage $privateMessage): self
+    public function addRecivedMessage(PrivateMessage $recivedMessage): self
     {
-        // set the owning side of the relation if necessary
-        if ($privateMessage->getSender() !== $this) {
-            $privateMessage->setSender($this);
+        if (!$this->recivedMessages->contains($recivedMessage)) {
+            $this->recivedMessages[] = $recivedMessage;
+            $recivedMessage->setReciver($this);
         }
-
-        $this->privateMessage = $privateMessage;
 
         return $this;
     }
-    public function getReciverPrivateMessage(): ?PrivateMessage
-    {
-        return $this->privateMessage;
-    }
 
-    public function setReciverPrivateMessage(PrivateMessage $privateMessage): self
+    public function removeRecivedMessage(PrivateMessage $recivedMessage): self
     {
-        // set the owning side of the relation if necessary
-        if ($privateMessage->getReciver() !== $this) {
-            $privateMessage->setReciver($this);
+        if ($this->recivedMessages->removeElement($recivedMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($recivedMessage->getReciver() === $this) {
+                $recivedMessage->setReciver(null);
+            }
         }
-
-        $this->privateMessage = $privateMessage;
 
         return $this;
     }
+
+    /**
+     * @return Collection|PrivateMessage[]
+     */
+    public function getSentMessages(): Collection
+    {
+        return $this->sentMessages;
+    }
+
+    public function addSentMessage(PrivateMessage $sentMessage): self
+    {
+        if (!$this->sentMessages->contains($sentMessage)) {
+            $this->sentMessages[] = $sentMessage;
+            $sentMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentMessage(PrivateMessage $sentMessage): self
+    {
+        if ($this->sentMessages->removeElement($sentMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sentMessage->getSender() === $this) {
+                $sentMessage->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

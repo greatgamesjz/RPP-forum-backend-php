@@ -27,10 +27,7 @@ class CategoryService implements CrudInterface
     {
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
-        $validator = new UserNicknameValidator($validator);
         $validator = new CategoryFieldsValidator($validator);
-        $validator = new UserEmailValidator($validator);
-        $validator->setEm($this->em->getRepository(Category::class));
         $validator->validate();
 
         unset($validator);
@@ -59,9 +56,22 @@ class CategoryService implements CrudInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws CategoryNotFoundException
+     */
     public function update(int $id, array $data)
     {
-        // TODO: Implement update() method.
+        /** @var  Category $cat */
+        $cat = $this->em->getRepository(Category::class)->findOneBy(["id" => $id]);
+        if(!$cat)
+            throw new CategoryNotFoundException($id);
+
+        $cat->setCategoryName($data["name"] ?? $cat->getCategoryName());
+        $cat->setIsActive($data["isActive"] ?? $cat->getIsActive());
+
+        $this->em->persist($cat);
+
+        $this->em->flush();
     }
 
     /**
