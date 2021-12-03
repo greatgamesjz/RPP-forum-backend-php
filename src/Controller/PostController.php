@@ -31,7 +31,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("api/post/add", name="add_post", methods={"GET"})
+     * @Route("api/post/add", name="add_post", methods={"POST"})
      */
     public function addPost(Request $request): JsonResponse
     {
@@ -40,6 +40,7 @@ class PostController extends AbstractController
         } catch (ValidatorExceptionInterface $e) {
             return $this->json($e->getMessage(), $e->getCode());
         } catch (\Exception $e){
+            dd($e);
             return $this->json($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json("Success");
