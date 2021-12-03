@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Topic;
+use App\Exception\CategoryNotFoundException;
 use App\Exception\TopicNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorWrongArgsCountException;
@@ -54,9 +55,23 @@ class TopicService implements CrudInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws TopicNotFoundException
+     */
     public function update(int $id, array $data)
     {
-        // TODO: Implement update() method.
+        /** @var  Topic $top */
+        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id]);
+        if(!$top)
+            throw new TopicNotFoundException($id);
+
+        $top->setTopicName($data["topicName"] ?? $top->getTopicName());
+        $top->setCategory($data["category"] ?? $top->getCategory());
+        $top->setIsActive($data["isActive"] ?? $top->getIsActive());
+
+        $this->em->persist($top);
+
+        $this->em->flush();
     }
 
     /**

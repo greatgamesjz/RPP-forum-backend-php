@@ -43,7 +43,6 @@ class TopicController extends AbstractController
      */
     public function addTopic(Request $request): JsonResponse
     {
-
         try {
             $this->topicService->add($request->request->all());
         } catch (ValidatorExceptionInterface $e) {
@@ -53,6 +52,7 @@ class TopicController extends AbstractController
         }
         return $this->json("Success");
     }
+
     /**
      * @Route("/api/topic/delete/{id}", name="delete_topic", methods={"GET"})
      */
@@ -60,6 +60,19 @@ class TopicController extends AbstractController
     {
         try {
             $this->topicService->delete($id);
+        } catch (TopicNotFoundException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("SUCCES");
+    }
+
+    /**
+     * @Route("/api/topic/update/{id}", name="update_topic", methods={"PATCH"})
+     */
+    public function updateTopic(Request $request, int $id): JsonResponse
+    {
+        try {
+            $this->topicService->update($id, $request->request->all());
         } catch (TopicNotFoundException $e){
             return $this->json($e->getMessage(), $e->getCode());
         }

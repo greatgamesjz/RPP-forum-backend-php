@@ -66,7 +66,7 @@ class CategoryService implements CrudInterface
         if(!$cat)
             throw new CategoryNotFoundException($id);
 
-        $cat->setCategoryName($data["name"] ?? $cat->getCategoryName());
+        $cat->setCategoryName($data["categoryName"] ?? $cat->getCategoryName());
         $cat->setIsActive($data["isActive"] ?? $cat->getIsActive());
 
         $this->em->persist($cat);
