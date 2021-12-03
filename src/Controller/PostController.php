@@ -40,7 +40,6 @@ class PostController extends AbstractController
         } catch (ValidatorExceptionInterface $e) {
             return $this->json($e->getMessage(), $e->getCode());
         } catch (\Exception $e){
-            dd($e);
             return $this->json($e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
         return $this->json("Success");
