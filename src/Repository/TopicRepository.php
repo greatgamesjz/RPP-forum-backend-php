@@ -36,6 +36,24 @@ class TopicRepository extends ServiceEntityRepository
     }
     */
 
+     /**
+      * @return Topic[] Returns an array of Topic objects
+      */
+
+    public function findByPages($maxResult, $page)
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.isDeleted = :val')
+            ->setParameter('val', false)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults($maxResult)
+            ->setFirstResult($page*$maxResult)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
     /*
     public function findOneBySomeField($value): ?Topic
     {

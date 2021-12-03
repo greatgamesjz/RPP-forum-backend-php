@@ -78,4 +78,12 @@ class TopicController extends AbstractController
         }
         return $this->json("SUCCES");
     }
+
+    /**
+     * @Route("/api/topic/get/pageall", name="page_topic", methods={"GET"})
+     */
+    public function getTopicsPage(Request $query): JsonResponse
+    {
+        return $this->json($this->topicService->getAllPages($query->query->all()));
+    }
 }
