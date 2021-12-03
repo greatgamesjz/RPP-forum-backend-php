@@ -70,7 +70,7 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/api/category/update/{id}", name="update_category", methods={"UPDATE"})
+     * @Route("/api/category/update/{id}", name="update_category", methods={"PATCH"})
      */
     public function updateCategory(Request $request, int $id) : JsonResponse
     {
