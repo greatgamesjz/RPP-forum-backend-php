@@ -31,7 +31,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("api/post/add", name="add_post", methods={"GET"})
+     * @Route("api/post/add", name="add_post", methods={"POST"})
      */
     public function addPost(Request $request): JsonResponse
     {

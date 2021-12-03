@@ -21,7 +21,6 @@ class TopicService implements CrudInterface
     /**
      * @throws ValidatorDataSetException
      * @throws ValidatorWrongArgsCountException
-     * @throws ValidatorWrongCharacterCountException
      */
     public function add(array $data)
     {
@@ -31,7 +30,6 @@ class TopicService implements CrudInterface
         $validator = new UserNicknameValidator($validator);
         $validator = new CategoryFieldsValidator($validator);
         $validator->validate();
-
         unset($validator);
 
         $topic = $this->normalizer->denormalize($data, Topic::class);

@@ -6,7 +6,9 @@ use App\Entity\Post;
 use App\Exception\PostIdNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorIdDoNotExists;
+use App\Exception\ValidatorWrongArgsCountException;
 use App\Exception\ValidatorWrongIdException;
+use App\Exception\ValidatorWrongTopicIdException;
 use App\Validator\CategoryValidator\CategoryContentValidator;
 use App\Validator\CategoryValidator\CategoryCreatorValidator;
 use App\Validator\CategoryValidator\CategoryTopicIdValidator;
@@ -24,7 +26,8 @@ class PostService implements CrudInterface
      * @throws ValidatorDataSetException
      * @throws ValidatorWrongIdException
      * @throws ValidatorIdDoNotExists
-     * @throws \App\Exception\ValidatorWrongTopicIdException
+     * @throws ValidatorWrongTopicIdException
+     * @throws ValidatorWrongArgsCountException
      */
     public function add(array $data)
     {
