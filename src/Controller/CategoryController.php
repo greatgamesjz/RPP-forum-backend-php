@@ -46,7 +46,6 @@ class CategoryController extends AbstractController
      */
     public function addCategory(Request $request): JsonResponse
     {
-
         try {
             $this->categoryService->add($request->request->all());
         } catch (ValidatorExceptionInterface $e) {
@@ -64,6 +63,19 @@ class CategoryController extends AbstractController
     {
         try {
             $this->categoryService->delete($id);
+        } catch (CategoryNotFoundException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("SUCCES");
+    }
+
+    /**
+     * @Route("/api/category/update/{id}", name="update_category", methods={"UPDATE"})
+     */
+    public function updateCategory(Request $request, int $id) : JsonResponse
+    {
+        try {
+            $this->categoryService->update($id, $request->request->all());
         } catch (CategoryNotFoundException $e){
             return $this->json($e->getMessage(), $e->getCode());
         }

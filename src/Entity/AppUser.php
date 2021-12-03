@@ -84,7 +84,17 @@ class AppUser
      * @ORM\Column(type="datetime")
      */
     private $registrationDate;
-  
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrivateMessage::class, mappedBy="reciver")
+     */
+    private $recivedMessages;
+
+    /**
+     * @ORM\OneToMany(targetEntity=PrivateMessage::class, mappedBy="sender")
+     */
+    private $sentMessages;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -97,6 +107,8 @@ class AppUser
         $this->registrationDate = new \DateTime();
         $this->avatarFileName = "";
         $this->isBanned = false;
+        $this->recivedMessages = new ArrayCollection();
+        $this->sentMessages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -343,4 +355,65 @@ class AppUser
 
         return $this;
     }
+
+    /**
+     * @return Collection|PrivateMessage[]
+     */
+    public function getRecivedMessages(): Collection
+    {
+        return $this->recivedMessages;
+    }
+
+    public function addRecivedMessage(PrivateMessage $recivedMessage): self
+    {
+        if (!$this->recivedMessages->contains($recivedMessage)) {
+            $this->recivedMessages[] = $recivedMessage;
+            $recivedMessage->setReciver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecivedMessage(PrivateMessage $recivedMessage): self
+    {
+        if ($this->recivedMessages->removeElement($recivedMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($recivedMessage->getReciver() === $this) {
+                $recivedMessage->setReciver(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PrivateMessage[]
+     */
+    public function getSentMessages(): Collection
+    {
+        return $this->sentMessages;
+    }
+
+    public function addSentMessage(PrivateMessage $sentMessage): self
+    {
+        if (!$this->sentMessages->contains($sentMessage)) {
+            $this->sentMessages[] = $sentMessage;
+            $sentMessage->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSentMessage(PrivateMessage $sentMessage): self
+    {
+        if ($this->sentMessages->removeElement($sentMessage)) {
+            // set the owning side to null (unless already changed)
+            if ($sentMessage->getSender() === $this) {
+                $sentMessage->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
