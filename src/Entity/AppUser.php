@@ -6,13 +6,13 @@ use App\Repository\AppUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AppUserRepository::class)
  * @ORM\Table(name="`appuser`")
  */
-class AppUser
-{
+class AppUser implements PasswordAuthenticatedUserInterface{
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
