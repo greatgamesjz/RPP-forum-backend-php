@@ -81,9 +81,15 @@ class PostService implements CrudInterface
         $validator->validate();
     }
 
+    /**
+     * @throws PostIdNotFoundException
+     */
     public function get(int $id)
     {
-        // TODO: Implement get() method.
+        $post = $this->em->getRepository(Post::class)->findOneBy(["id" => $id]);
+        if(!$post)
+            throw new PostIdNotFoundException($id);
+        return $post;
     }
     public function getAll(): array
     {

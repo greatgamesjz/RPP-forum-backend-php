@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\PostIdNotFoundException;
 use App\Exception\ValidatorExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,9 +26,13 @@ class PostController extends AbstractController
     /**
      * @Route("api/post/get/{id}", name="get_post", methods={"GET"})
      */
-    public function getPost(int $id)
+    public function getPost(int $id): JsonResponse
     {
-        //TODO implement method
+        try{
+            return $this->json(json_encode($this->postService->get($id)));
+        }catch (PostIdNotFoundException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
     }
 
     /**
