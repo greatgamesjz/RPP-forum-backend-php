@@ -4,11 +4,14 @@ namespace App\Service;
 
 use App\Entity\AppUser;
 use App\Entity\Category;
+use App\Exception\CategoryNotFoundException;
 use App\Exception\UserNotFoundException;
-use App\Validator\CategoryValidator\CategoryEmailValidator;
+use App\Exception\ValidatorWrongCharacterCountException;
+use App\Exception\ValidatorWrongCharacterPasswordException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorEmaiIExistsException;
 use App\Exception\ValidatorWrongCharacterEmailException;
+use App\Validator\UserValidator\UserIdValidator;
 use App\Validator\UserValidator\UserNicknameValidator;
 use App\Validator\UserValidator\UserPasswordValidator;
 use App\Validator\UserValidator\UserEmailValidator;
@@ -88,5 +91,73 @@ class UserService implements CrudInterface
             ];
         }
         return $result;
+    }
+
+    /**
+     * @throws ValidatorDataSetException
+     * @throws ValidatorWrongCharacterCountException
+     * @throws CategoryNotFoundException
+     * @throws \App\Exception\ValidatorIdDoNotExists
+     */
+    public function updateNickname(array $data)
+    {
+        $validator = (new ValidatorDecorator());
+        $validator->setData($data);
+        $validator = new UserNicknameValidator($validator);
+        $validator = new UserIdValidator($validator);
+        $validator->setem($this->em);
+        $validator->validate();
+
+        /** @var AppUser $nickname */
+        $nickname = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"]]);
+        if(!$nickname)
+            throw new CategoryNotFoundException($data["id"]);
+        $nickname->setNickname($data["nickname"] ?? $nickname->getNickname());
+        $this->em->persist($nickname);
+        $this->em->flush();
+    }
+
+    /**
+     * @throws ValidatorDataSetException
+     * @throws ValidatorEmaiIExistsException
+     * @throws ValidatorWrongCharacterEmailException
+     * @throws CategoryNotFoundException
+     */
+    public function updateEmail(array $data)
+    {
+        $validator = (new ValidatorDecorator());
+        $validator->setData($data);
+        $validator = new UserEmailValidator($validator);
+        $validator->setem($this->em);
+        $validator->validate();
+
+        /** @var AppUser $email */
+        $email = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"]]);
+        if(!$email)
+            throw new CategoryNotFoundException($data["id"]);
+        $email->setEmail($data["email"] ?? $email->getEmail());
+        $this->em->persist($email);
+        $this->em->flush();
+    }
+
+    /**
+     * @throws ValidatorDataSetException
+     * @throws ValidatorWrongCharacterPasswordException
+     * @throws CategoryNotFoundException
+     */
+    public function updatePassword(array $data)
+    {
+        $validator = (new ValidatorDecorator());
+        $validator->setData($data);
+        $validator = new UserPasswordValidator($validator);
+        $validator->validate();
+
+        /** @var AppUser $password */
+        $password = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"]]);
+        if(!$password)
+            throw new CategoryNotFoundException($data["id"]);
+        $password->setPassword($data["password"] ?? $password->getPassword());
+        $this->em->persist($password);
+        $this->em->flush();
     }
 }
