@@ -14,11 +14,14 @@ use App\Validator\UserValidator\UserPasswordValidator;
 use App\Validator\UserValidator\UserEmailValidator;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class UserService implements CrudInterface
 {
-    public function __construct(private EntityManagerInterface $em,  private NormalizerInterface $normalizer){}
+    public function __construct(private EntityManagerInterface $em,
+                                private NormalizerInterface $normalizer,
+                                private UserPasswordHasherInterface $passwordHasher){}
 
 
     /**
@@ -39,12 +42,17 @@ class UserService implements CrudInterface
 
         unset($validator);
 
-        $category = $this->normalizer->denormalize($data, AppUser::class);
+        /** @var  AppUser $user */
+        $user = $this->normalizer->denormalize($data, AppUser::class);
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $user->getPassword()
+        );
+        $user->setPassword($hashedPassword);
 
-        $this->em->persist($category);
+        $this->em->persist($user);
 
         $this->em->flush();
-
     }
 
     public function delete(int $id)
