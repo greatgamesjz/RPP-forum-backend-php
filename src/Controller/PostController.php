@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\PostIdNotFoundException;
 use App\Exception\ValidatorExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -50,7 +51,11 @@ class PostController extends AbstractController
      */
     public function deletePost(int $id): JsonResponse
     {
-
+        try{
+            $this->postService->delete($id);
+        }catch (PostIdNotFoundException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
         return $this->json("Success");
     }
 }
