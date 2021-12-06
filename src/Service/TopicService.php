@@ -110,8 +110,6 @@ class TopicService implements CrudInterface
     {
         /** @var TopicRepository $topRepo */
         $topRepo = $this->em->getRepository(Topic::class);
-        $topList = $topRepo->findByPages($data["limit"], $data["page"]);
-
-        return $topList;
+        return $topRepo->findByPages($data["maxResult"], $data["page"]);
     }
 }
