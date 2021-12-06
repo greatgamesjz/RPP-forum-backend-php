@@ -27,9 +27,9 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @Route("/api/topic/get/{id}", name="get_topic", methods={"GET"})
+     * @Route("/api/topic/get/{id}", name="get_topic", methods={"GET"}, requirements={"id"="^[0-9]*$"})
      */
-    public function getTopic(int $id)
+    public function getTopic(int $id): JsonResponse
     {
         try {
             return $this->json(json_encode(($this->topicService->get($id))));
@@ -77,5 +77,17 @@ class TopicController extends AbstractController
             return $this->json($e->getMessage(), $e->getCode());
         }
         return $this->json("SUCCES");
+    }
+
+    /**
+     * @Route("/api/topic/get/pageall", name="page_topic", methods={"GET"})
+     */
+    public function getTopicsPage(Request $query): JsonResponse
+    {
+        return $this->json(
+            json_encode(
+                $this->topicService->getAllPages($query->query->all())
+            )
+        );
     }
 }

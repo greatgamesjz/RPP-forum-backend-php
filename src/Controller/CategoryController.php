@@ -30,9 +30,9 @@ class CategoryController extends AbstractController
     }
 
     /**
-     * @Route("/api/category/get/{id}", name="get_category", methods={"GET"})
+     * @Route("/api/category/get/{id}", name="get_category", methods={"GET"}, requirements={"id"="^[0-9]*$"})
      */
-    public function getCategory(int $id)
+    public function getCategory(int $id): JsonResponse
     {
         try {
             return $this->json(json_encode(($this->categoryService->get($id))));

@@ -8,6 +8,7 @@ use App\Exception\TopicNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorWrongArgsCountException;
 use App\Exception\ValidatorWrongCharacterCountException;
+use App\Repository\TopicRepository;
 use App\Validator\CategoryValidator\CategoryFieldsValidator;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -103,5 +104,12 @@ class TopicService implements CrudInterface
         }
 
         return $topicListResponse;
+    }
+
+    public function getAllPages(array $data): array
+    {
+        /** @var TopicRepository $topRepo */
+        $topRepo = $this->em->getRepository(Topic::class);
+        return $topRepo->findByPages($data["maxResult"], $data["page"]);
     }
 }

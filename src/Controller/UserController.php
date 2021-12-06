@@ -27,7 +27,7 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/user/get/{id}", name="get_user", methods={"GET"})
+     * @Route("/api/user/get/{id}", name="get_user", methods={"GET"}, requirements={"id"="^[0-9]*$"})
      */
     public function getAppUser(int $id): Response
     {

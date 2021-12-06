@@ -24,7 +24,7 @@ class PostController extends AbstractController
     }
 
     /**
-     * @Route("api/post/get/{id}", name="get_post", methods={"GET"})
+     * @Route("api/post/get/{id}", name="get_post", methods={"GET"}, requirements={"id"="^[0-9]*$"})
      */
     public function getPost(int $id)
     {
