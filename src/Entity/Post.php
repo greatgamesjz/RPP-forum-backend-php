@@ -7,11 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use JetBrains\PhpStorm\Internal\TentativeType;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
  */
-class Post
+class Post implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -204,5 +205,20 @@ class Post
         $this->isDeleted = $isDeleted;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "Id" => $this->getId(),
+            "CreatorId" => $this->getCreator()->getId(),
+            "CreatorName" => $this->getCreator()->getNickname(),
+            "TopicId" => $this->getTopic()->getId(),
+            "CreationDate" => $this->getCreationDate(),
+            "LastModify" => $this->getLastModify(),
+            "Content" => $this->getContent(),
+            "IsActive" => $this->getIsActive(),
+            "IsDelete" => $this->getIsDeleted(),
+        ];
     }
 }
