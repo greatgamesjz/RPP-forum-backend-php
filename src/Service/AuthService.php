@@ -63,4 +63,10 @@ class AuthService
         )
             throw new AccessDeniedException();
     }
+
+    public function isAuthorized(int $id)
+    {
+        if($id != $this->session->get("id"))
+            throw new AccessDeniedException();
+    }
 }
