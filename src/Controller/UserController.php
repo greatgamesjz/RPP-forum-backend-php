@@ -2,11 +2,14 @@
 
 namespace App\Controller;
 
+use App\Exception\CategoryNotFoundException;
 use App\Exception\UserNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorEmaiIExistsException;
+use App\Exception\ValidatorIdDoNotExists;
 use App\Exception\ValidatorWrongCharacterCountException;
 use App\Exception\ValidatorWrongCharacterEmailException;
+use App\Exception\ValidatorWrongCharacterPasswordException;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -49,5 +52,32 @@ class UserController extends AbstractController
         }catch(ValidatorWrongCharacterEmailException|ValidatorDataSetException|ValidatorEmaiIExistsException $e){
             return $this->json($e->getMessage(), $e->getCode());
         }
+    }
+
+    /**
+     * @Route("/api/user/update", name="user_update", methods={"PATCH"})
+     */
+    public function update(Request $request): JsonResponse
+    {
+        try {
+            $this->userService->update($request->request->get("id"),$request->request->all());
+        } catch (CategoryNotFoundException|ValidatorDataSetException|ValidatorEmaiIExistsException|
+        ValidatorIdDoNotExists|ValidatorWrongCharacterEmailException|ValidatorWrongCharacterCountException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("success");
+    }
+
+    /**
+     * @Route("/api/user/update/password", name="update_password", methods={"PATCH"})
+     */
+    public function updatePassword(Request $request): JsonResponse
+    {
+        try {
+            $this->userService->updatePassword($request->request->all());
+        }catch (ValidatorDataSetException | ValidatorWrongCharacterPasswordException | CategoryNotFoundException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("Success");
     }
 }
