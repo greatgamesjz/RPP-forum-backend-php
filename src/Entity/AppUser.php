@@ -95,6 +95,16 @@ class AppUser implements PasswordAuthenticatedUserInterface{
      */
     private $sentMessages;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenExpireDate;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -412,6 +422,30 @@ class AppUser implements PasswordAuthenticatedUserInterface{
                 $sentMessage->setSender(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getTokenExpireDate(): ?\DateTimeInterface
+    {
+        return $this->tokenExpireDate;
+    }
+
+    public function setTokenExpireDate(?\DateTimeInterface $tokenExpireDate): self
+    {
+        $this->tokenExpireDate = $tokenExpireDate;
 
         return $this;
     }
