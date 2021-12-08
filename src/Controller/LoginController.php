@@ -39,7 +39,7 @@ class LoginController extends AbstractController
     }
 
     /**
-     * @Route("/api/authorize", name="authorize", methods={"POST"})
+     * @Route("/api/authorize", name="authorize", methods={"GET"})
      */
     public function checkSession(): JsonResponse{
         try {
