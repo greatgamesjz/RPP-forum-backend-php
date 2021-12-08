@@ -6,6 +6,7 @@ use App\Entity\AppUser;
 use App\Entity\Category;
 use App\Exception\CategoryNotFoundException;
 use App\Exception\UserNotFoundException;
+use App\Exception\ValidatorIdDoNotExists;
 use App\Exception\ValidatorWrongCharacterCountException;
 use App\Exception\ValidatorWrongCharacterPasswordException;
 use App\Exception\ValidatorDataSetException;
@@ -55,13 +56,28 @@ class UserService implements CrudInterface
         // TODO: Implement delete() method.
     }
 
+    /**
+     * @throws ValidatorDataSetException
+     * @throws ValidatorWrongCharacterCountException
+     * @throws ValidatorWrongCharacterEmailException
+     * @throws CategoryNotFoundException
+     * @throws ValidatorEmaiIExistsException
+     * @throws ValidatorIdDoNotExists
+     */
     public function update(int $id, array $data)
     {
-        // TODO: Implement update() method.
+        if(array_key_exists("nickname",$data))
+        {
+            $this->updateNickname($data);
+        }
+        if (array_key_exists("email",$data))
+        {
+            $this->updateEmail($data);
+        }
     }
 
     /**
-     * @param int|null $id
+     * @param int $id
      * @return AppUser[]
      * @throws UserNotFoundException
      */

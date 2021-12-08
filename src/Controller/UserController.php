@@ -55,29 +55,17 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/api/user/update/nickname", name="update_user", methods={"PATCH"})
+     * @Route("/api/user/update", name="user_update", methods={"PATCH"})
      */
-    public function updateNickname(Request $request): JsonResponse
+    public function update(Request $request): JsonResponse
     {
         try {
-            $this->userService->updateNickname($request->request->all());
-        } catch (CategoryNotFoundException | ValidatorDataSetException | ValidatorWrongCharacterCountException | ValidatorIdDoNotExists $e) {
+            $this->userService->update($request->request->get("id"),$request->request->all());
+        } catch (CategoryNotFoundException|ValidatorDataSetException|ValidatorEmaiIExistsException|
+        ValidatorIdDoNotExists|ValidatorWrongCharacterEmailException|ValidatorWrongCharacterCountException $e) {
             return $this->json($e->getMessage(), $e->getCode());
         }
-        return $this->json("Success");
-    }
-
-    /**
-     * @Route("/api/user/update/email", name="update_email", methods={"PATCH"})
-     */
-    public function updateEmail(Request $request): JsonResponse
-    {
-        try{
-            $this->userService->updateEmail($request->request->all());
-        }catch (CategoryNotFoundException | ValidatorWrongCharacterEmailException | ValidatorEmaiIExistsException | ValidatorDataSetException $e){
-            return $this->json($e->getMessage(), $e->getCode());
-        }
-        return $this->json("Success");
+        return $this->json("success");
     }
 
     /**
