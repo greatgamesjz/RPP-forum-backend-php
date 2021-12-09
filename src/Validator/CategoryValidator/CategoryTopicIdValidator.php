@@ -11,7 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class CategoryTopicIdValidator extends ValidatorDecorator
 {
     private EntityManagerInterface $entityManager;
-    const WHITELISTED_FIELDS = ["creator_id", "topic_id", "content"];
+    const WHITELISTED_FIELDS = ["creator", "topic", "content"];
 
     public function setem(EntityManagerInterface $entityManager): void
     {
@@ -23,7 +23,7 @@ class CategoryTopicIdValidator extends ValidatorDecorator
      */
     public function validate()
     {
-        $this->validateTopicId(intval($this->data["topic_id"]));
+        $this->validateTopicId(intval($this->data["topic"]));
         $this->validateFieldsExists();
         $this->validateFieldsNotExists();
         parent::validate();
