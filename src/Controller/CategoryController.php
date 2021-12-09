@@ -35,7 +35,7 @@ class CategoryController extends AbstractController
     public function getCategory(int $id): JsonResponse
     {
         try {
-            return $this->json(json_encode(($this->categoryService->get($id))));
+            return $this->json(json_encode($this->categoryService->get($id)));
         } catch (CategoryNotFoundException $e) {
             return $this->json($e->getMessage(), $e->getCode());
         }
