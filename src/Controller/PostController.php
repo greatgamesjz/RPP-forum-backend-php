@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Exception\PostIdNotFoundException;
+use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorExceptionInterface;
+use App\Exception\ValidatorIdDoNotExists;
+use App\Exception\ValidatorWrongIdException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\PostService;
@@ -58,4 +61,19 @@ class PostController extends AbstractController
         }
         return $this->json("Success");
     }
+
+    /**
+     * @Route("api/post/update/{id}", name="update_post", methods={"POST"})
+     */
+    public function updatePost(Request $request, int $id): JsonResponse
+    {
+        try {
+            $this->postService->update($id, $request->request->all());
+        } catch (PostIdNotFoundException|ValidatorDataSetException|
+        ValidatorIdDoNotExists|ValidatorWrongIdException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("Success");
+    }
+
 }

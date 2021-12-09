@@ -71,14 +71,27 @@ class PostService implements CrudInterface
      * @throws ValidatorDataSetException
      * @throws ValidatorIdDoNotExists
      * @throws ValidatorWrongIdException
+     * @throws PostIdNotFoundException
      */
     public function update(int $id, array $data)
     {
+        /** @var Post $post */
+        $post = $this->em->getRepository(Post::class)->findOneBy(["id" => $id]);
+        if (!$post)
+            throw new PostIdNotFoundException($id);
+
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
-        $validator = new CategoryCreatorValidator($validator);
+        $validator = new CategoryContentValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
+
+        $post->setContent($data["content"] ?? $post->getContent());
+        $post->setIsActive($data["isActive"] ?? $post->getIsActive());
+
+        $this->em->persist($post);
+
+        $this->em->flush();
     }
 
     public function get(int $id)

@@ -46,7 +46,6 @@ class CategoryContentValidator extends ValidatorDecorator
     {
         foreach (self::INDECENTWORDS as $field)
         {
-            //dd($this->data);
             if(in_array($field,$this->data))
                 throw new ValidatorIndecentWordsException();
         }
