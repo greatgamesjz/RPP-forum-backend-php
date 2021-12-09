@@ -7,7 +7,9 @@ use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorExceptionInterface;
 use App\Exception\ValidatorIdDoNotExists;
 use App\Exception\ValidatorWrongIdException;
+use App\Service\AuthService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\PostService;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,7 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PostController extends AbstractController
 {
-    public function __construct(private PostService $postService){}
+    public function __construct(private PostService $postService,
+                                private AuthService $authService){}
 
     /**
      * @Route("api/post/get/all", name="get_posts", methods={"GET"})
@@ -76,4 +79,18 @@ class PostController extends AbstractController
         return $this->json("Success");
     }
 
+     * @Route("/api/like", name="like", methods={"POST"})
+     */
+    public function likePost(Request $request): JsonResponse{
+        try {
+            $this->authService->isAuthorized($request->request->get("userId"));
+            $this->postService->likePost(
+                $request->request->get("postId"),
+                $request->request->get("userId")
+            );
+        }catch(AccessDeniedException|PostIdNotFoundException $e){
+            return $this->json($e->getMessage(), RESPONSE::HTTP_BAD_REQUEST | $e->getCode());
+        }
+        return $this->json("Success");
+    }
 }

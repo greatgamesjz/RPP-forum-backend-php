@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\AppUser;
 use App\Entity\Post;
 use App\Exception\PostIdNotFoundException;
 use App\Exception\ValidatorDataSetException;
@@ -117,5 +118,27 @@ class PostService implements CrudInterface
             $postListResponse[] = $postData;
         }
         return $postListResponse;
+    }
+
+    /**
+     * @throws PostIdNotFoundException
+     */
+    public function likePost(int $postId, int $userId)
+    {
+        /** @var Post $post */
+        $post = $this->em->getRepository(Post::class)
+            ->findOneBy(["id" => $postId]);
+
+        if(!$post)
+            throw new PostIdNotFoundException($postId);
+
+        $user = $this->em->getRepository(AppUser::class)
+            ->findOneBy(["id" => $userId]);
+
+        $post->addUsersLiked($user);
+
+        $this->em->persist($post);
+
+        $this->em->flush();
     }
 }
