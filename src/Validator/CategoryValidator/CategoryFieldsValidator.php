@@ -7,7 +7,7 @@ use App\Validator\ValidatorDecorator;
 
 class CategoryFieldsValidator extends ValidatorDecorator
 {
-    const WHITELISTED_FIELDS = ["name","creator"];
+    const WHITELISTED_FIELDS = ["creator","name"];
 
     /**
      * @throws ValidatorWrongArgsCountException

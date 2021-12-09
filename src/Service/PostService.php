@@ -35,15 +35,15 @@ class PostService implements CrudInterface
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
         $validator = new CategoryCreatorValidator($validator);
+        $validator->setem($this->em);
         $validator = new CategoryContentValidator($validator);
+        $validator->setem($this->em);
         $validator = new CategoryTopicIdValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
-
         unset($validator);
-
+        $data["post_name"] = "Do wywalenia";
         $post = $this->normalizer->denormalize($data, post::class);
-
         $this->em->persist($post);
 
         $this->em->flush();
