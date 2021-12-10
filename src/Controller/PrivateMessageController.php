@@ -72,4 +72,16 @@ class PrivateMessageController extends AbstractController
             return $this->json($e->getMessage(), $e->getCode());
         }
     }
+
+    /**
+     * @Route("/api/pm/get/all", name="get_pm", methods={"GET"})
+     */
+    public function getAllPrivateMessages(Request $query): JsonResponse
+    {
+        return $this->json(
+            json_encode(
+                $this->privateMessageService->getAll($query->query->all())
+            )
+        );
+    }
 }
