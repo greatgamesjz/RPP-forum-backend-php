@@ -35,15 +35,15 @@ class PostService implements CrudInterface
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
         $validator = new CategoryCreatorValidator($validator);
+        $validator->setem($this->em);
         $validator = new CategoryContentValidator($validator);
+        $validator->setem($this->em);
         $validator = new CategoryTopicIdValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
-
         unset($validator);
-
+        $data["post_name"] = "Do wywalenia";
         $post = $this->normalizer->denormalize($data, post::class);
-
         $this->em->persist($post);
 
         $this->em->flush();
@@ -72,14 +72,27 @@ class PostService implements CrudInterface
      * @throws ValidatorDataSetException
      * @throws ValidatorIdDoNotExists
      * @throws ValidatorWrongIdException
+     * @throws PostIdNotFoundException
      */
     public function update(int $id, array $data)
     {
+        /** @var Post $post */
+        $post = $this->em->getRepository(Post::class)->findOneBy(["id" => $id]);
+        if (!$post)
+            throw new PostIdNotFoundException($id);
+
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
-        $validator = new CategoryCreatorValidator($validator);
+        $validator = new CategoryContentValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
+
+        $post->setContent($data["content"] ?? $post->getContent());
+        $post->setIsActive($data["isActive"] ?? $post->getIsActive());
+
+        $this->em->persist($post);
+
+        $this->em->flush();
     }
 
     public function get(int $id)
