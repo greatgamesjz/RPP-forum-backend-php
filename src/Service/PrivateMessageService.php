@@ -60,7 +60,8 @@ class PrivateMessageService implements CrudInterface
     public function update(int $id, array $data)
     {
         /** @var  PrivateMessage $pm */
-        $pm = $this->em->getRepository(PrivateMessage::class)->findOneBy(["id" => $id]);
+        $pm = $this->em->getRepository(PrivateMessage::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+
         if(!$pm)
             throw new PrivateMessageNotFoundException($id);
 
@@ -76,9 +77,10 @@ class PrivateMessageService implements CrudInterface
      */
     public function get(int $id)
     {
-        $pm = $this->em->getRepository(PrivateMessage::class)->findOneBy(["id" => $id]);
+        $pm = $this->em->getRepository(PrivateMessage::class)->findOneBy(["id" => $id, "isDeleted" => false]);
         if (!$pm)
             throw new PrivateMessageNotFoundException($id);
+
         return $pm;
     }
 

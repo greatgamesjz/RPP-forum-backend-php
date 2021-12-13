@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\AppUser;
 use App\Entity\Post;
 use App\Exception\PostIdNotFoundException;
+use App\Exception\UserNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorIdDoNotExists;
 use App\Exception\ValidatorWrongArgsCountException;
@@ -77,7 +78,7 @@ class PostService implements CrudInterface
     public function update(int $id, array $data)
     {
         /** @var Post $post */
-        $post = $this->em->getRepository(Post::class)->findOneBy(["id" => $id]);
+        $post = $this->em->getRepository(Post::class)->findOneBy(["id" => $id, "isDeleted" => false]);
         if (!$post)
             throw new PostIdNotFoundException($id);
 
@@ -122,18 +123,21 @@ class PostService implements CrudInterface
 
     /**
      * @throws PostIdNotFoundException
+     * @throws UserNotFoundException
      */
     public function likePost(int $postId, int $userId)
     {
         /** @var Post $post */
         $post = $this->em->getRepository(Post::class)
-            ->findOneBy(["id" => $postId]);
+            ->findOneBy(["id" => $postId, "isDeleted" => false]);
 
         if(!$post)
             throw new PostIdNotFoundException($postId);
 
         $user = $this->em->getRepository(AppUser::class)
-            ->findOneBy(["id" => $userId]);
+            ->findOneBy(["id" => $userId, "isDeleted" => false]);
+        if(!$user)
+            throw new UserNotFoundException($userId);
 
         $post->addUsersLiked($user);
 
