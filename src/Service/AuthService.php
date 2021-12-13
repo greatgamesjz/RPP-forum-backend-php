@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\AppUser;
 use App\Exception\LoginFailedException;
+use App\Exception\UserNotActiveException;
 use App\Exception\UserNotFoundException;
 use App\Exception\ValidatorWrongArgsCountException;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,15 +21,20 @@ class AuthService
     /**
      * @throws UserNotFoundException
      * @throws LoginFailedException
+     * @throws UserNotActiveException
      */
     public function checkIfPasswordValid(?string $nickname, ?string $password): void{
 
         if(!$nickname || !$password)
             throw new LoginFailedException();
 
+        /** @var AppUser $user */
         $user = $this->em->getRepository(AppUser::class)->findOneBy(["nickname" => $nickname]);
         if(!$user)
             throw new UserNotFoundException($nickname);
+
+        if(!$user->getIsActive())
+            throw new UserNotActiveException();
 
          $this->passwordHasher->isPasswordValid($user, $password) ?: throw new LoginFailedException();
     }

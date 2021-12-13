@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Exception\LoginFailedException;
+use App\Exception\UserNotActiveException;
 use App\Service\AuthService;
 use App\Exception\UserNotFoundException;
 use App\Exception\ValidatorDataSetException;
@@ -34,6 +35,8 @@ class LoginController extends AbstractController
 
         }catch(LoginFailedException|UserNotFoundException|AccessDeniedException $e){
             return $this->json($e->getMessage(), RESPONSE::HTTP_FORBIDDEN);
+        }catch(UserNotActiveException $e){
+            return $this->json($e->getMessage(), $e->getCode());
         }
         return $this->json("success");
     }
