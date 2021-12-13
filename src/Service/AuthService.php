@@ -56,7 +56,7 @@ class AuthService
         $sesId = $this->session->get("id");
 
         /** @var AppUser $user */
-        $user = $this->em->getRepository(AppUser::class)->findOneBy(["id" => $sesId]);
+        $user = $this->em->getRepository(AppUser::class)->findOneBy(["id" => $sesId, "isDeleted" => false]);
 
         if($sesToken != $user->getToken() ||
             $user->getTokenExpireDate() < new \DateTime("now")

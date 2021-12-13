@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Exception\PostIdNotFoundException;
+use App\Exception\UserNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorExceptionInterface;
 use App\Exception\ValidatorIdDoNotExists;
@@ -79,6 +80,7 @@ class PostController extends AbstractController
         return $this->json("Success");
     }
 
+    /**
      * @Route("/api/like", name="like", methods={"POST"})
      */
     public function likePost(Request $request): JsonResponse{
@@ -90,6 +92,8 @@ class PostController extends AbstractController
             );
         }catch(AccessDeniedException|PostIdNotFoundException $e){
             return $this->json($e->getMessage(), RESPONSE::HTTP_BAD_REQUEST | $e->getCode());
+        }catch(UserNotFoundException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
         }
         return $this->json("Success");
     }

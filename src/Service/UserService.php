@@ -94,7 +94,7 @@ class UserService implements CrudInterface
         $result = [];
 
             /** @var AppUser $user */
-            $user = $this->em->getRepository(AppUser::class)->findOneBy(["id" => $id]);
+            $user = $this->em->getRepository(AppUser::class)->findOneBy(["id" => $id, "isDeleted" => false]);
             if(!$user)
                 throw new UserNotFoundException($id);
             $result[] = [
@@ -107,7 +107,7 @@ class UserService implements CrudInterface
     {
         $result = [];
         /** @var AppUser[] $users */
-        $users = $this->em->getRepository(AppUser::class)->findAll();
+        $users = $this->em->getRepository(AppUser::class)->findBy(["isDeleted" => false]);
         foreach ($users as $user) {
             $result[] = [
                 "name" => $user->getNickname(),
@@ -133,7 +133,7 @@ class UserService implements CrudInterface
         $validator->validate();
 
         /** @var AppUser $nickname */
-        $nickname = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"]]);
+        $nickname = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"], "isDeleted" => false]);
         if(!$nickname)
             throw new CategoryNotFoundException($data["id"]);
         $nickname->setNickname($data["nickname"] ?? $nickname->getNickname());
@@ -156,7 +156,7 @@ class UserService implements CrudInterface
         $validator->validate();
 
         /** @var AppUser $email */
-        $email = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"]]);
+        $email = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"], "isDeleted" => false]);
         if(!$email)
             throw new CategoryNotFoundException($data["id"]);
         $email->setEmail($data["email"] ?? $email->getEmail());
@@ -177,7 +177,7 @@ class UserService implements CrudInterface
         $validator->validate();
 
         /** @var AppUser $password */
-        $password = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"]]);
+        $password = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"], "isDeleted" => false]);
         if(!$password)
             throw new CategoryNotFoundException($data["id"]);
         $password->setPassword($data["password"] ?? $password->getPassword());
