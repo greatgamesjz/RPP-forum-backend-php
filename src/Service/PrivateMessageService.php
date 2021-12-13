@@ -6,6 +6,7 @@ use App\Entity\AppUser;
 use App\Entity\PrivateMessage;
 use App\Exception\PrivateMessageNotFoundException;
 use App\Exception\UserNotFoundException;
+use App\Repository\PrivateMessageRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -76,8 +77,16 @@ class PrivateMessageService implements CrudInterface
     public function get(int $id)
     {
         $pm = $this->em->getRepository(PrivateMessage::class)->findOneBy(["id" => $id]);
-        if(!$pm)
+        if (!$pm)
             throw new PrivateMessageNotFoundException($id);
         return $pm;
     }
+
+        public function getAll(array $data): array
+    {
+        /** @var PrivateMessageRepository $pmRepo */
+        $pmRepo = $this->em->getRepository(PrivateMessage::class);
+        return $pmRepo->findByPages($data["maxResult"], $data["page"], $data["id"]);
+    }
+
 }
