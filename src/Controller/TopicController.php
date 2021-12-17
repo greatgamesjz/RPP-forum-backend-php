@@ -54,7 +54,7 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @Route("/api/topic/delete/{id}", name="delete_topic", methods={"GET"})
+     * @Route("/api/topic/delete/{id}", name="delete_topic", methods={"GET"}, requirements={"id"="^[0-9]*$"})
      */
     public function deleteTopic(int $id): JsonResponse
     {
@@ -67,7 +67,7 @@ class TopicController extends AbstractController
     }
 
     /**
-     * @Route("/api/topic/update/{id}", name="update_topic", methods={"PATCH"})
+     * @Route("/api/topic/update/{id}", name="update_topic", methods={"POST"}, requirements={"id"="^[0-9]*$"})
      */
     public function updateTopic(Request $request, int $id): JsonResponse
     {

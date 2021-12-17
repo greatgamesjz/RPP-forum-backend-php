@@ -105,6 +105,11 @@ class AppUser implements PasswordAuthenticatedUserInterface{
      */
     private $tokenExpireDate;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Status::class, mappedBy="user")
+     */
+    private $statuses;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -119,6 +124,7 @@ class AppUser implements PasswordAuthenticatedUserInterface{
         $this->isBanned = false;
         $this->recivedMessages = new ArrayCollection();
         $this->sentMessages = new ArrayCollection();
+        $this->statuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -446,6 +452,36 @@ class AppUser implements PasswordAuthenticatedUserInterface{
     public function setTokenExpireDate(?\DateTimeInterface $tokenExpireDate): self
     {
         $this->tokenExpireDate = $tokenExpireDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Status[]
+     */
+    public function getStatuses(): Collection
+    {
+        return $this->statuses;
+    }
+
+    public function addStatus(Status $status): self
+    {
+        if (!$this->statuses->contains($status)) {
+            $this->statuses[] = $status;
+            $status->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStatus(Status $status): self
+    {
+        if ($this->statuses->removeElement($status)) {
+            // set the owning side to null (unless already changed)
+            if ($status->getUser() === $this) {
+                $status->setUser(null);
+            }
+        }
 
         return $this;
     }
