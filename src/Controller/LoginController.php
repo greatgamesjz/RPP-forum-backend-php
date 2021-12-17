@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Exception\LoginFailedException;
+use App\Exception\UserAlreadyActiveException;
 use App\Exception\UserNotActiveException;
 use App\Service\AuthService;
 use App\Exception\UserNotFoundException;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+
 
 class LoginController extends AbstractController
 {
@@ -51,5 +53,29 @@ class LoginController extends AbstractController
             return $this->json($e->getMessage(), RESPONSE::HTTP_FORBIDDEN);
         }
         return $this->json("success");
+    }
+
+    /**
+     * @Route("/api/getactivationlink/{id}", name="get_activationlink", methods={"GET"}, requirements={"id"="^[0-9]*$"})
+     */
+    public function getActivationLink(int $id): JsonResponse{
+        try {
+            $this->authService->getActivationLink($id);
+        }catch(UserNotFoundException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("Success");
+    }
+
+    /**
+     * @Route("/api/activate/{token}", name="activate", methods={"GET"})
+     */
+    public function activateUser(string $token): JsonResponse{
+        try {
+            $this->authService->activateUser($token);
+        }catch(UserNotFoundException | UserAlreadyActiveException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("Success");
     }
 }

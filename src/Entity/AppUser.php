@@ -110,6 +110,11 @@ class AppUser implements PasswordAuthenticatedUserInterface{
      */
     private $statuses;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $activationToken;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -482,6 +487,18 @@ class AppUser implements PasswordAuthenticatedUserInterface{
                 $status->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getActivationToken(): ?string
+    {
+        return $this->activationToken;
+    }
+
+    public function setActivationToken(?string $activationToken): self
+    {
+        $this->activationToken = $activationToken;
 
         return $this;
     }
