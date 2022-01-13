@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\AppUser;
 use App\Entity\Post;
 use App\Exception\PostIdNotFoundException;
+use App\Exception\UserNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorIdDoNotExists;
 use App\Exception\ValidatorWrongArgsCountException;
@@ -34,15 +36,15 @@ class PostService implements CrudInterface
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
         $validator = new CategoryCreatorValidator($validator);
+        $validator->setem($this->em);
         $validator = new CategoryContentValidator($validator);
+        $validator->setem($this->em);
         $validator = new CategoryTopicIdValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
-
         unset($validator);
-
+        $data["post_name"] = "Do wywalenia";
         $post = $this->normalizer->denormalize($data, post::class);
-
         $this->em->persist($post);
 
         $this->em->flush();
@@ -71,14 +73,27 @@ class PostService implements CrudInterface
      * @throws ValidatorDataSetException
      * @throws ValidatorIdDoNotExists
      * @throws ValidatorWrongIdException
+     * @throws PostIdNotFoundException
      */
     public function update(int $id, array $data)
     {
+        /** @var Post $post */
+        $post = $this->em->getRepository(Post::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+        if (!$post)
+            throw new PostIdNotFoundException($id);
+
         $validator = (new ValidatorDecorator());
         $validator->setData($data);
-        $validator = new CategoryCreatorValidator($validator);
+        $validator = new CategoryContentValidator($validator);
         $validator->setem($this->em);
         $validator->validate();
+
+        $post->setContent($data["content"] ?? $post->getContent());
+        $post->setIsActive($data["isActive"] ?? $post->getIsActive());
+
+        $this->em->persist($post);
+
+        $this->em->flush();
     }
 
     /**
@@ -113,5 +128,30 @@ class PostService implements CrudInterface
             $postListResponse[] = $postData;
         }
         return $postListResponse;
+    }
+
+    /**
+     * @throws PostIdNotFoundException
+     * @throws UserNotFoundException
+     */
+    public function likePost(int $postId, int $userId)
+    {
+        /** @var Post $post */
+        $post = $this->em->getRepository(Post::class)
+            ->findOneBy(["id" => $postId, "isDeleted" => false]);
+
+        if(!$post)
+            throw new PostIdNotFoundException($postId);
+
+        $user = $this->em->getRepository(AppUser::class)
+            ->findOneBy(["id" => $userId, "isDeleted" => false]);
+        if(!$user)
+            throw new UserNotFoundException($userId);
+
+        $post->addUsersLiked($user);
+
+        $this->em->persist($post);
+
+        $this->em->flush();
     }
 }

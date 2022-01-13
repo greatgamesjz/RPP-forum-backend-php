@@ -3,12 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\PrivateMessageRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PrivateMessageRepository::class)
  */
-class PrivateMessage
+class PrivateMessage implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -43,6 +44,12 @@ class PrivateMessage
      * @ORM\JoinColumn(nullable=false)
      */
     private $sender;
+
+    public function __construct()
+    {
+        $this->isDeleted = false;
+        $this->sendTime = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -107,5 +114,17 @@ class PrivateMessage
         $this->sender = $sender;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "Id" => $this->getId(),
+            "Content" => $this->getContent(),
+            "SendTime" => $this->getSendTime(),
+            "IsDeleted" => $this->getIsDeleted(),
+            "Reciver" => $this->getReciver()->getid(),
+            "Sender" => $this->getSender()->getid(),
+        ];
     }
 }

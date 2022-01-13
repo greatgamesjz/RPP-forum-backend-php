@@ -8,6 +8,7 @@ use App\Exception\TopicNotFoundException;
 use App\Exception\ValidatorDataSetException;
 use App\Exception\ValidatorWrongArgsCountException;
 use App\Exception\ValidatorWrongCharacterCountException;
+use App\Repository\TopicRepository;
 use App\Validator\CategoryValidator\CategoryFieldsValidator;
 use App\Validator\ValidatorDecorator;
 use Doctrine\ORM\EntityManagerInterface;
@@ -61,7 +62,7 @@ class TopicService implements CrudInterface
     public function update(int $id, array $data)
     {
         /** @var  Topic $top */
-        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id]);
+        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id, "isDeleted" => false]);
         if(!$top)
             throw new TopicNotFoundException($id);
 
@@ -79,9 +80,10 @@ class TopicService implements CrudInterface
      */
     public function get(int $id)
     {
-        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id]);
+        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id, "isDeleted" => false]);
         if(!$top)
             throw new TopicNotFoundException($id);
+
         return $top;
     }
 
@@ -103,5 +105,12 @@ class TopicService implements CrudInterface
         }
 
         return $topicListResponse;
+    }
+
+    public function getAllPages(array $data): array
+    {
+        /** @var TopicRepository $topRepo */
+        $topRepo = $this->em->getRepository(Topic::class);
+        return $topRepo->findByPages($data["maxResult"], $data["page"]);
     }
 }

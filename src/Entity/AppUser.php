@@ -6,13 +6,13 @@ use App\Repository\AppUserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AppUserRepository::class)
  * @ORM\Table(name="`appuser`")
  */
-class AppUser
-{
+class AppUser implements PasswordAuthenticatedUserInterface{
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -95,6 +95,26 @@ class AppUser
      */
     private $sentMessages;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $tokenExpireDate;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Status::class, mappedBy="user")
+     */
+    private $statuses;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $activationToken;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -109,6 +129,7 @@ class AppUser
         $this->isBanned = false;
         $this->recivedMessages = new ArrayCollection();
         $this->sentMessages = new ArrayCollection();
+        $this->statuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -412,6 +433,72 @@ class AppUser
                 $sentMessage->setSender(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    public function getTokenExpireDate(): ?\DateTimeInterface
+    {
+        return $this->tokenExpireDate;
+    }
+
+    public function setTokenExpireDate(?\DateTimeInterface $tokenExpireDate): self
+    {
+        $this->tokenExpireDate = $tokenExpireDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Status[]
+     */
+    public function getStatuses(): Collection
+    {
+        return $this->statuses;
+    }
+
+    public function addStatus(Status $status): self
+    {
+        if (!$this->statuses->contains($status)) {
+            $this->statuses[] = $status;
+            $status->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStatus(Status $status): self
+    {
+        if ($this->statuses->removeElement($status)) {
+            // set the owning side to null (unless already changed)
+            if ($status->getUser() === $this) {
+                $status->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getActivationToken(): ?string
+    {
+        return $this->activationToken;
+    }
+
+    public function setActivationToken(?string $activationToken): self
+    {
+        $this->activationToken = $activationToken;
 
         return $this;
     }

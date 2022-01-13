@@ -182,6 +182,11 @@ class Post implements \JsonSerializable
         return $this;
     }
 
+    public function getUsersLikeCout(): int
+    {
+        return count($this->getUsersLiked());
+    }
+
     public function getIsActive(): ?bool
     {
         return $this->isActive;

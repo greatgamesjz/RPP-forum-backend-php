@@ -22,9 +22,9 @@ class CategoryCreatorValidator extends ValidatorDecorator
      */
     public function validate()
     {
-        $this->isNumeric(strval($this->data["creator_id"]));
-        $this->correctId(strval($this->data["creator_id"]));
-        $this->isAppUserExists(strval($this->data["creator_id"]));
+        $this->isNumeric(strval($this->data["creator"]));
+        $this->correctId(strval($this->data["creator"]));
+        $this->isAppUserExists(strval($this->data["creator"]));
         parent::validate();
     }
 
