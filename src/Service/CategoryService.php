@@ -62,7 +62,9 @@ class CategoryService implements CrudInterface
     public function update(int $id, array $data)
     {
         /** @var  Category $cat */
-        $cat = $this->em->getRepository(Category::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+        $cat = $this->em->getRepository(Category::class)
+            ->findOneBy(["id" => $id, "isDeleted" => false]);
+
         if(!$cat)
             throw new CategoryNotFoundException($id);
 
@@ -79,7 +81,9 @@ class CategoryService implements CrudInterface
      */
     public function get(int $id)
     {
-        $cat = $this->em->getRepository(Category::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+        $cat = $this->em->getRepository(Category::class)
+            ->findOneBy(["id" => $id, "isDeleted" => false, "isActive" => true]);
+
         if(!$cat)
             throw new CategoryNotFoundException($id);
         return $cat;

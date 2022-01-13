@@ -20,6 +20,7 @@ use OpenApi\Annotations as OA;
 
 class UserController extends AbstractController
 {
+
     public function __construct(private UserService $userService){}
 
     /**
@@ -70,7 +71,7 @@ class UserController extends AbstractController
     {
         try {
             $this->userService->update($request->request->get("id"),$request->request->all());
-        } catch (CategoryNotFoundException|ValidatorDataSetException|ValidatorEmaiIExistsException|
+        } catch (UserNotFoundException | ValidatorDataSetException|ValidatorEmaiIExistsException|
         ValidatorIdDoNotExists|ValidatorWrongCharacterEmailException|ValidatorWrongCharacterCountException $e) {
             return $this->json($e->getMessage(), $e->getCode());
         }
@@ -86,9 +87,24 @@ class UserController extends AbstractController
     {
         try {
             $this->userService->updatePassword($request->request->all());
-        }catch (ValidatorDataSetException | ValidatorWrongCharacterPasswordException | CategoryNotFoundException $e){
+        }catch (ValidatorDataSetException | ValidatorWrongCharacterPasswordException | UserNotFoundException $e){
             return $this->json($e->getMessage(), $e->getCode());
         }
         return $this->json("Success");
+    }
+
+    /**
+     * @Route("/api/user/delete/{id}", name="delete_user", methods={"DELETE"})
+     * @OA\Response (response=200, description="Usuwa użytkownika.")
+     * @OA\Tag (name="User")
+     */
+    public function deleteUser(int $id) : JsonResponse
+    {
+        try {
+            $this->userService->delete($id);
+        } catch (UserNotFoundException $e){
+            return $this->json($e->getMessage(), $e->getCode());
+        }
+        return $this->json("SUCCES");
     }
 }

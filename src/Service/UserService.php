@@ -59,17 +59,29 @@ class UserService implements CrudInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws UserNotFoundException
+     */
     public function delete(int $id)
     {
-        // TODO: Implement delete() method.
+        /** @var AppUser $user */
+        $user = $this->em->getRepository(AppUser::class)
+            ->findOneBy(["id" => $id, "isDeleted" => false]);
+        if(!$user)
+            throw new UserNotFoundException($id);
+        $user->setIsDeleted(true);
+
+        $this->em->persist($user);
+
+        $this->em->flush();
     }
 
     /**
      * @throws ValidatorDataSetException
      * @throws ValidatorWrongCharacterCountException
      * @throws ValidatorWrongCharacterEmailException
-     * @throws CategoryNotFoundException
      * @throws ValidatorEmaiIExistsException
+     * @throws UserNotFoundException
      * @throws ValidatorIdDoNotExists
      */
     public function update(int $id, array $data)
@@ -94,7 +106,9 @@ class UserService implements CrudInterface
         $result = [];
 
             /** @var AppUser $user */
-            $user = $this->em->getRepository(AppUser::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+            $user = $this->em->getRepository(AppUser::class)
+                ->findOneBy(["id" => $id, "isDeleted" => false]);
+
             if(!$user)
                 throw new UserNotFoundException($id);
             $result[] = [
@@ -107,7 +121,9 @@ class UserService implements CrudInterface
     {
         $result = [];
         /** @var AppUser[] $users */
-        $users = $this->em->getRepository(AppUser::class)->findBy(["isDeleted" => false]);
+        $users = $this->em->getRepository(AppUser::class)
+            ->findBy(["isDeleted" => false]);
+
         foreach ($users as $user) {
             $result[] = [
                 "name" => $user->getNickname(),
@@ -120,8 +136,8 @@ class UserService implements CrudInterface
     /**
      * @throws ValidatorDataSetException
      * @throws ValidatorWrongCharacterCountException
-     * @throws CategoryNotFoundException
-     * @throws \App\Exception\ValidatorIdDoNotExists
+     * @throws UserNotFoundException
+     * @throws ValidatorIdDoNotExists
      */
     public function updateNickname(array $data)
     {
@@ -133,9 +149,11 @@ class UserService implements CrudInterface
         $validator->validate();
 
         /** @var AppUser $nickname */
-        $nickname = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"], "isDeleted" => false]);
+        $nickname = $this->em->getRepository(AppUser::class)
+            ->findOneBy(["id" => $data["id"], "isDeleted" => false]);
+
         if(!$nickname)
-            throw new CategoryNotFoundException($data["id"]);
+            throw new UserNotFoundException($data["id"]);
         $nickname->setNickname($data["nickname"] ?? $nickname->getNickname());
         $this->em->persist($nickname);
         $this->em->flush();
@@ -145,7 +163,7 @@ class UserService implements CrudInterface
      * @throws ValidatorDataSetException
      * @throws ValidatorEmaiIExistsException
      * @throws ValidatorWrongCharacterEmailException
-     * @throws CategoryNotFoundException
+     * @throws UserNotFoundException
      */
     public function updateEmail(array $data)
     {
@@ -156,10 +174,12 @@ class UserService implements CrudInterface
         $validator->validate();
 
         /** @var AppUser $email */
-        $email = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"], "isDeleted" => false]);
+        $email = $this->em->getRepository(AppUser::class)
+            ->findOneBy(["id" => $data["id"], "isDeleted" => false]);
+
         if(!$email)
-            throw new CategoryNotFoundException($data["id"]);
-        $email->setEmail($data["email"] ?? $email->getEmail());
+            throw new UserNotFoundException($data["id"]);
+        $email->setEmail($data["email"]?? $email->getEmail());
         $this->em->persist($email);
         $this->em->flush();
     }
@@ -167,7 +187,7 @@ class UserService implements CrudInterface
     /**
      * @throws ValidatorDataSetException
      * @throws ValidatorWrongCharacterPasswordException
-     * @throws CategoryNotFoundException
+     * @throws UserNotFoundException
      */
     public function updatePassword(array $data)
     {
@@ -177,9 +197,11 @@ class UserService implements CrudInterface
         $validator->validate();
 
         /** @var AppUser $password */
-        $password = $this->em->getRepository(appuser::class)->findOneBy(["id" => $data["id"], "isDeleted" => false]);
+        $password = $this->em->getRepository(AppUser::class)
+            ->findOneBy(["id" => $data["id"], "isDeleted" => false]);
+
         if(!$password)
-            throw new CategoryNotFoundException($data["id"]);
+            throw new UserNotFoundException($data["id"]);
         $password->setPassword($data["password"] ?? $password->getPassword());
         $this->em->persist($password);
         $this->em->flush();
