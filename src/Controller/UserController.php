@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use OpenApi\Annotations as OA;
 
 class UserController extends AbstractController
 {
@@ -23,6 +24,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/api/user/get/all", name="get_users", methods={"GET"})
+     * @OA\Response (response=200, description="Zwraca wszystkich użytkowników.")
+     * @OA\Tag (name="User")
      */
     public function getAppUsers(): JsonResponse
     {
@@ -31,6 +34,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/api/user/get/{id}", name="get_user", methods={"GET"}, requirements={"id"="^[0-9]*$"})
+     * @OA\Response (response=200, description="Zwraca użytkownika.")
+     * @OA\Tag (name="User")
      */
     public function getAppUser(int $id): Response
     {
@@ -43,6 +48,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/api/user/add", name="add_user", methods={"POST"})
+     * @OA\Response (response=200, description="Dodaje użytkownika.")
+     * @OA\Tag (name="User")
      */
     public function addUser(Request $request): JsonResponse
     {
@@ -56,6 +63,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/api/user/update", name="user_update", methods={"PATCH"})
+     * @OA\Response (response=200, description="Edytuje użytkownika.")
+     * @OA\Tag (name="User")
      */
     public function update(Request $request): JsonResponse
     {
@@ -70,6 +79,8 @@ class UserController extends AbstractController
 
     /**
      * @Route("/api/user/update/password", name="update_password", methods={"PATCH"})
+     * @OA\Response (response=200, description="Edytuje hasło użytkownika.")
+     * @OA\Tag (name="User")
      */
     public function updatePassword(Request $request): JsonResponse
     {

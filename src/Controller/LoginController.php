@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use OpenApi\Annotations as OA;
 
 
 class LoginController extends AbstractController
@@ -26,6 +27,8 @@ class LoginController extends AbstractController
 
     /**
      * @Route("/api/login", name="login", methods={"POST"})
+     * @OA\Response (response=200, description="Loguje użytkownika.")
+     * @OA\Tag (name="Login")
      */
     public function login(Request $request): JsonResponse{
         try {
@@ -45,6 +48,8 @@ class LoginController extends AbstractController
 
     /**
      * @Route("/api/authorize", name="authorize", methods={"GET"})
+     * @OA\Response (response=200, description="Autoryzuje użytkownika.")
+     * @OA\Tag (name="Login")
      */
     public function checkSession(): JsonResponse{
         try {
@@ -56,7 +61,13 @@ class LoginController extends AbstractController
     }
 
     /**
-     * @Route("/api/getactivationlink/{id}", name="get_activationlink", methods={"GET"}, requirements={"id"="^[0-9]*$"})
+     * @Route("/api/getactivationlink/{id}",
+     *     name="get_activationlink",
+     *     methods={"GET"},
+     *     requirements={"id"="^[0-9]*$"}
+     *     )
+     * @OA\Response (response=200, description="Wysyła link aktywacyjny użytkownikowi.")
+     * @OA\Tag (name="Login")
      */
     public function getActivationLink(int $id): JsonResponse{
         try {
@@ -69,6 +80,8 @@ class LoginController extends AbstractController
 
     /**
      * @Route("/api/activate/{token}", name="activate", methods={"GET"})
+     * @OA\Response (response=200, description="Aktywuje użytkownika.")
+     * @OA\Tag (name="Login")
      */
     public function activateUser(string $token): JsonResponse{
         try {
