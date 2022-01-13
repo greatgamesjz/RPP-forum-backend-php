@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
-use JetBrains\PhpStorm\Internal\TentativeType;
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
