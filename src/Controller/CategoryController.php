@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use OpenApi\Annotations as OA;
 
 class CategoryController extends AbstractController
 {
@@ -23,6 +24,8 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/api/category/get/all", name="get_categories", methods={"GET"})
+     * @OA\Response (response=200, description="Zwraca wszystkie kategorie.")
+     * @OA\Tag (name="Category")
      */
     public function getCategories(): JsonResponse
     {
@@ -31,6 +34,8 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/api/category/get/{id}", name="get_category", methods={"GET"}, requirements={"id"="^[0-9]*$"})
+     * @OA\Response (response=200, description="Zwraca kategorię.")
+     * @OA\Tag (name="Category")
      */
     public function getCategory(int $id): JsonResponse
     {
@@ -43,6 +48,8 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/api/category/add", name="add_category", methods={"POST"})
+     * @OA\Response (response=200, description="Dodaje kategorię.")
+     * @OA\Tag (name="Category")
      */
     public function addCategory(Request $request): JsonResponse
     {
@@ -58,6 +65,8 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/api/category/delete/{id}", name="delete_category", methods={"DELETE"})
+     * @OA\Response (response=200, description="Usuwa kategorię.")
+     * @OA\Tag (name="Category")
      */
     public function deleteCategory(int $id) : JsonResponse
     {
@@ -71,6 +80,8 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/api/category/update/{id}", name="update_category", methods={"PATCH"})
+     * @OA\Response (response=200, description="Edytuje kategorię.")
+     * @OA\Tag (name="Category")
      */
     public function updateCategory(Request $request, int $id) : JsonResponse
     {

@@ -16,6 +16,7 @@ use App\Service\PostService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use OpenApi\Annotations as OA;
 
 class PostController extends AbstractController
 {
@@ -24,6 +25,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("api/post/get/all", name="get_posts", methods={"GET"})
+     * @OA\Response (response=200, description="Zwraca wszystkie posty.")
+     * @OA\Tag (name="Post")
      */
     public function getPosts(): JsonResponse
     {
@@ -32,6 +35,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("api/post/get/{id}", name="get_post", methods={"GET"}, requirements={"id"="^[0-9]*$"})
+     * @OA\Response (response=200, description="Zwraca post.")
+     * @OA\Tag (name="Post")
      */
     public function getPost(int $id)
     {
@@ -40,6 +45,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("api/post/add", name="add_post", methods={"POST"})
+     * @OA\Response (response=200, description="Dodaje post.")
+     * @OA\Tag (name="Post")
      */
     public function addPost(Request $request): JsonResponse
     {
@@ -55,6 +62,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("api/post/delete/{id}", name="delete_post", methods={"GET"})
+     * @OA\Response (response=200, description="Usuwa post.")
+     * @OA\Tag (name="Post")
      */
     public function deletePost(int $id): JsonResponse
     {
@@ -68,6 +77,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("api/post/update/{id}", name="update_post", methods={"POST"})
+     * @OA\Response (response=200, description="Edytuje post.")
+     * @OA\Tag (name="Post")
      */
     public function updatePost(Request $request, int $id): JsonResponse
     {
@@ -82,6 +93,8 @@ class PostController extends AbstractController
 
     /**
      * @Route("/api/like", name="like", methods={"POST"})
+     * @OA\Response (response=200, description="Dodaje polubienie do postu.")
+     * @OA\Tag (name="Post")
      */
     public function likePost(Request $request): JsonResponse{
         try {

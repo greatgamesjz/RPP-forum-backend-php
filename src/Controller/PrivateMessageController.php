@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use OpenApi\Annotations as OA;
 
 class PrivateMessageController extends AbstractController
 {
@@ -26,6 +27,8 @@ class PrivateMessageController extends AbstractController
 
     /**
      * @Route("/api/pm/add", name="add_pm", methods={"POST"})
+     * @OA\Response (response=200, description="Dodaje prywatną wiadomość.")
+     * @OA\Tag (name="Private Message")
      */
     public function addPrivateMessage(Request $request): JsonResponse{
         try {
@@ -39,6 +42,8 @@ class PrivateMessageController extends AbstractController
 
     /**
      * @Route("/api/pm/delete/{id}", name="delete_pm", methods={"DELETE"}, requirements={"id"="^[0-9]*$"})
+     * @OA\Response (response=200, description="Usuwa prywatną wiadomość.")
+     * @OA\Tag (name="Private Message")
      */
     public function deletePrivateMessage(int $id): JsonResponse{
         try {
@@ -51,6 +56,8 @@ class PrivateMessageController extends AbstractController
 
     /**
      * @Route("/api/pm/update/{id}", name="update_pm", methods={"PATCH"})
+     * @OA\Response (response=200, description="Edytuje prywatną wiadomość.")
+     * @OA\Tag (name="Private Message")
      */
     public function updatePrivateMessage(int $id, Request $request) : JsonResponse{
         try {
@@ -63,6 +70,8 @@ class PrivateMessageController extends AbstractController
 
     /**
      * @Route("/api/pm/get/{id}", name="get_pm", methods={"GET"}, requirements={"id"="^[0-9]*$"})
+     * @OA\Response (response=200, description="Zwraca prywatną wiadomość.")
+     * @OA\Tag (name="Private Message")
      */
     public function getPrivateMessage(int $id): JsonResponse
     {
@@ -75,6 +84,8 @@ class PrivateMessageController extends AbstractController
 
     /**
      * @Route("/api/pm/get/all", name="get_pm", methods={"GET"})
+     * @OA\Response (response=200, description="Zwraca wszystkie prywatne wiadomości.")
+     * @OA\Tag (name="Private Message")
      */
     public function getAllPrivateMessages(Request $query): JsonResponse
     {
