@@ -38,9 +38,13 @@ class PostController extends AbstractController
      * @OA\Response (response=200, description="Zwraca post.")
      * @OA\Tag (name="Post")
      */
-    public function getPost(int $id)
+    public function getPost(int $id): JsonResponse
     {
-        //TODO implement method
+        try{
+            return $this->json(json_encode($this->postService->get($id)));
+        }catch (PostIdNotFoundException $e) {
+            return $this->json($e->getMessage(), $e->getCode());
+        }
     }
 
     /**

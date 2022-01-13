@@ -96,9 +96,18 @@ class PostService implements CrudInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws PostIdNotFoundException
+     */
     public function get(int $id)
     {
-        // TODO: Implement get() method.
+        $post = $this->em->getRepository(Post::class)->findOneBy(
+            ["id" => $id, 'isDeleted' => false, 'isActive' => true]
+        );
+
+        if(!$post)
+            throw new PostIdNotFoundException($id);
+        return $post;
     }
     public function getAll(): array
     {
