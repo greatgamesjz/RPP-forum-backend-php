@@ -78,7 +78,9 @@ class PostService implements CrudInterface
     public function update(int $id, array $data)
     {
         /** @var Post $post */
-        $post = $this->em->getRepository(Post::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+        $post = $this->em->getRepository(Post::class)
+            ->findOneBy(["id" => $id, 'isDeleted' => false, 'isActive' => true]);
+
         if (!$post)
             throw new PostIdNotFoundException($id);
 
@@ -101,9 +103,8 @@ class PostService implements CrudInterface
      */
     public function get(int $id)
     {
-        $post = $this->em->getRepository(Post::class)->findOneBy(
-            ["id" => $id, 'isDeleted' => false, 'isActive' => true]
-        );
+        $post = $this->em->getRepository(Post::class)
+            ->findOneBy(["id" => $id, 'isDeleted' => false, 'isActive' => true]);
 
         if(!$post)
             throw new PostIdNotFoundException($id);
@@ -138,7 +139,7 @@ class PostService implements CrudInterface
     {
         /** @var Post $post */
         $post = $this->em->getRepository(Post::class)
-            ->findOneBy(["id" => $postId, "isDeleted" => false]);
+            ->findOneBy(["id" => $postId, 'isDeleted' => false, 'isActive' => true]);
 
         if(!$post)
             throw new PostIdNotFoundException($postId);

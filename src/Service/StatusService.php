@@ -21,7 +21,9 @@ class StatusService implements CrudInterface
      */
     public function add(array $data)
     {
-        $user = $this->em->getRepository(AppUser::class)->findOneBy(["id" => $data["userId"]]);
+        $user = $this->em->getRepository(AppUser::class)
+            ->findOneBy(["id" => $data["userId"]]);
+
         if(!$user)
             throw new UserNotFoundException($data["userId"]);
 
@@ -57,7 +59,9 @@ class StatusService implements CrudInterface
     public function update(int $id, array $data)
     {
         /** @var  Status $status */
-        $status = $this->em->getRepository(Status::class)->findOneBy(["id" => $id]);
+        $status = $this->em->getRepository(Status::class)
+            ->findOneBy(["id" => $id]);
+
         if(!$status)
             throw new StatusNotFoundException($id);
 
@@ -74,7 +78,9 @@ class StatusService implements CrudInterface
      */
     public function get(int $id)
     {
-        $status = $this->em->getRepository(Status::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+        $status = $this->em->getRepository(Status::class)
+            ->findOneBy(["id" => $id, "isDeleted" => false]);
+
         if(!$status)
             throw new StatusNotFoundException($id);
 

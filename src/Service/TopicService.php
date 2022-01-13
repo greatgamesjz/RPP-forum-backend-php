@@ -46,7 +46,7 @@ class TopicService implements CrudInterface
     {
         /** @var Topic $top */
         $top = $this->em->getRepository(Topic::class)
-            ->findOneBy(["id" => $id, "isDeleted" => false]);
+            ->findOneBy(["id" => $id, 'isDeleted' => false, 'isActive' => true]);
         if(!$top)
             throw new TopicNotFoundException($id);
         $top->setIsDeleted(true);
@@ -62,7 +62,8 @@ class TopicService implements CrudInterface
     public function update(int $id, array $data)
     {
         /** @var  Topic $top */
-        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+        $top = $this->em->getRepository(Topic::class)
+            ->findOneBy(["id" => $id, 'isDeleted' => false, 'isActive' => true]);
         if(!$top)
             throw new TopicNotFoundException($id);
 
@@ -80,7 +81,9 @@ class TopicService implements CrudInterface
      */
     public function get(int $id)
     {
-        $top = $this->em->getRepository(Topic::class)->findOneBy(["id" => $id, "isDeleted" => false]);
+        $top = $this->em->getRepository(Topic::class)
+            ->findOneBy(["id" => $id, 'isDeleted' => false, 'isActive' => true]);
+
         if(!$top)
             throw new TopicNotFoundException($id);
 
