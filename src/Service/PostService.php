@@ -11,6 +11,7 @@ use App\Exception\ValidatorIdDoNotExists;
 use App\Exception\ValidatorWrongArgsCountException;
 use App\Exception\ValidatorWrongIdException;
 use App\Exception\ValidatorWrongTopicIdException;
+use App\Repository\PostRepository;
 use App\Validator\CategoryValidator\CategoryContentValidator;
 use App\Validator\CategoryValidator\CategoryCreatorValidator;
 use App\Validator\CategoryValidator\CategoryTopicIdValidator;
@@ -154,5 +155,12 @@ class PostService implements CrudInterface
         $this->em->persist($post);
 
         $this->em->flush();
+    }
+
+    public function getAllPages(array $data): array
+    {
+        /** @var PostRepository $postRepo */
+        $postRepo = $this->em->getRepository(Post::class);
+        return $postRepo->findByPages($data["maxResult"], $data["page"]);
     }
 }
