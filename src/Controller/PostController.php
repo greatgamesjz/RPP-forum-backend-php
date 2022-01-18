@@ -114,4 +114,18 @@ class PostController extends AbstractController
         }
         return $this->json("Success");
     }
+
+    /**
+     * @Route("/api/post/get/pageall", name="page_post", methods={"GET"})
+     * @OA\Response (response=200, description="Zwraca posty z paginacją.")
+     * @OA\Tag (name="Post")
+     */
+    public function getPostsPage(Request $query): JsonResponse
+    {
+        return $this->json(
+            json_encode(
+                $this->postService->getAllPages($query->query->all())
+            )
+        );
+    }
 }

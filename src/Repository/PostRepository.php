@@ -19,9 +19,6 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    // /**
-    //  * @return Post[] Returns an array of Post objects
-    //  */
     /*
     public function findByExampleField($value)
     {
@@ -36,15 +33,23 @@ class PostRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Post
+    /**
+     * @return Post[] Returns an array of Post objects
+     */
+
+    public function findByPages($maxResult, $page): array
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.isDeleted = :val')
+            ->andWhere('t.isActive = :val2')
+            ->setParameter('val', false)
+            ->setParameter('val2', true)
+            ->orderBy('t.id', 'ASC')
+            ->setMaxResults($maxResult)
+            ->setFirstResult(($page-1)*$maxResult)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult()
+            ;
     }
-    */
+
 }
